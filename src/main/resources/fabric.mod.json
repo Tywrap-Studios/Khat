@@ -3,28 +3,34 @@
   "id": "${id}",
   "version": "${version}",
   "name": "${name}",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Khat, Chat, to Discord.",
   "authors": [
-    "Me!"
+    "Tywrap Studios",
+    ">> ItsTiazzz"
   ],
   "contact": {
-    "homepage": "https://stonecutter.kikugie.dev/",
-    "sources": "https://codeberg.org/stonecutter/template-fabric"
+    "homepage": "https://github.com/Tywrap-Studios/Khat",
+    "sources": "https://github.com/Tywrap-Studios/Khat",
+    "issues": "https://github.com/Tywrap-Studios/Khat"
   },
-  "license": "CC0-1.0",
-  "icon": "assets/template/icon.png",
-  "environment": "*",
+  "license": "TYSPAL-2.0",
+  "icon": "assets/khat/icon.png",
+  "environment": "server",
   "entrypoints": {
-    "main": [
-      "com.example.TemplateMod"
+    "server": [
+      {
+        "value": "org.tywrapstudios.khat.KhatMod",
+        "adapter": "kotlin"
+      }
     ]
   },
   "mixins": [
-    "template.mixins.json"
+    "khat.mixins.json"
   ],
-  "accessWidener": "template.accesswidener",
+  "accessWidener": "khat.accesswidener",
   "depends": {
     "fabricloader": ">=0.17",
-    "minecraft": "${minecraft}"
+    "minecraft": "${minecraft}",
+    "fabric-language-kotlin": "*"
   }
 }

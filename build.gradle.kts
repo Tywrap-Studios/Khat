@@ -1,8 +1,9 @@
 plugins {
-    id("net.fabricmc.fabric-loom-remap")
+    alias(libs.plugins.loom.remap)
+    alias(libs.plugins.kotlin.jvm)
 
     // `maven-publish`
-    // id("me.modmuss50.mod-publish-plugin")
+    // alias(libs.plugins.mod.publish)
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -40,13 +41,17 @@ dependencies {
     minecraft("com.mojang:minecraft:${sc.current.version}")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
+    modImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.fabric_kotlin")}")
+
+    include(libs.konf.core)
+    include(libs.konf.toml)
 
     fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0")
 }
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
-    accessWidenerPath = rootProject.file("src/main/resources/template.accesswidener")
+    accessWidenerPath = rootProject.file("src/main/resources/${property("mod.id")}.accesswidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1") // Adds names to lambdas - useful for mixins

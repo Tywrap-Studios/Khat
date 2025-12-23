@@ -1,0 +1,13 @@
+[versions]
+kotlin = "2.3.0"
+
+konf = "1.1.2"
+
+[libraries]
+konf-core = { module = "com.uchuhimo:konf-core", version.ref = "konf" }
+konf-toml = { module = "com.uchuhimo:konf-toml", version.ref = "konf" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+loom-remap = { id = "net.fabricmc.fabric-loom-remap"}
+mod-publish = { id = "me.modmuss50.mod-publish-plugin"}
