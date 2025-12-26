@@ -14,7 +14,7 @@
     "issues": "https://github.com/Tywrap-Studios/Khat"
   },
   "license": "TYSPAL-2.0",
-  "icon": "assets/khat/icon.png",
+  "icon": "assets/${id}/icon.png",
   "environment": "server",
   "entrypoints": {
     "server": [
@@ -25,12 +25,13 @@
     ]
   },
   "mixins": [
-    "khat.mixins.json"
+    "ctd.mixins.json"
   ],
-  "accessWidener": "khat.accesswidener",
+  "accessWidener": "ctd.accesswidener",
   "depends": {
     "fabricloader": ">=0.17",
     "minecraft": "${minecraft}",
-    "fabric-language-kotlin": "*"
+    "fabric-language-kotlin": "*",
+    "fabric-api": "*"
   }
 }

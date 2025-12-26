@@ -1,9 +1,10 @@
 {
   "required": true,
-  "package": "org.tywrapstudios.mixin",
+  "package": "org.tywrapstudios.khat.mixin",
   "compatibilityLevel": "${java}",
   "mixins": [
-
+    "CrashReportMixin",
+    "AsyncWorldInfoProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

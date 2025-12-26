@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.loom.remap)
-    alias(libs.plugins.kotlin.jvm)
+    id("net.fabricmc.fabric-loom-remap")
+    id("org.jetbrains.kotlin.jvm") version "2.3.0"
 
     // `maven-publish`
-    // alias(libs.plugins.mod.publish)
+     id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -27,6 +27,7 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
+    maven("https://jitpack.io") { name = "JitPack" }
 }
 
 dependencies {
@@ -38,15 +39,36 @@ dependencies {
         for (it in modules) modImplementation(fabricApi.module(it, property("deps.fabric_api") as String))
     }
 
+    fun DependencyHandlerScope.includeImplementation(dep: String) {
+        implementation(dep)
+        include(dep)
+    }
+
     minecraft("com.mojang:minecraft:${sc.current.version}")
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${property("deps.fabric_kotlin")}")
 
-    include(libs.konf.core)
-    include(libs.konf.toml)
+    /* Libraries */
+    // Config
+    includeImplementation("com.uchuhimo:konf-core:${property("deps.konf")}")
+    includeImplementation("com.uchuhimo:konf-toml:${property("deps.konf")}")
+    // mclo.gs API
+    includeImplementation("gs.mclo:api:${property("deps.mclogs")}")
+    // DC Webhook API
+    includeImplementation("com.github.talemke.diskord-webhooks:diskord-webhooks:${property("deps.diskord-webhooks")}")
 
-    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0")
+    /* Compat */
+    // Spark
+    compileOnly("maven.modrinth:spark:${property("deps.spark")}")
+
+    fapi(
+        "fabric-lifecycle-events-v1",
+        "fabric-message-api-v1",
+        "fabric-command-api-v2",
+        "fabric-resource-loader-v0",
+        "fabric-content-registries-v0"
+    )
 }
 
 loom {
@@ -68,6 +90,13 @@ java {
     withSourcesJar()
     targetCompatibility = requiredJava
     sourceCompatibility = requiredJava
+}
+
+kotlin {
+    jvmToolchain(requiredJava.majorVersion.toInt())
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(requiredJava.majorVersion))
+    }
 }
 
 tasks {
@@ -99,7 +128,6 @@ tasks {
     }
 }
 
-/*
 // Publishes builds to Modrinth and Curseforge with changelog from the CHANGELOG.md file
 publishMods {
     file = tasks.remapJar.map { it.archiveFile.get() }
@@ -109,29 +137,35 @@ publishMods {
     changelog = rootProject.file("CHANGELOG.md").readText()
     type = STABLE
     modLoaders.add("fabric")
+    modLoaders.add("quilt")
 
     dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
-        || providers.environmentVariable("CURSEFORGE_TOKEN").getOrNull() == null
+        || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
 
     modrinth {
         projectId = property("publish.modrinth") as String
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
-        requires {
-            slug = "fabric-api"
-        }
+        projectDescription = rootProject.file("README.md").readText()
+
+        requires("fabric-api", "fabric-language-kotlin")
     }
 
-    curseforge {
-        projectId = property("publish.curseforge") as String
-        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
-        requires {
-            slug = "fabric-api"
-        }
+//    curseforge {
+//        projectId = property("publish.curseforge") as String
+//        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+//        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
+//        requires {
+//            slug = "fabric-api"
+//        }
+//    }
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = "Tywrap-Studios/Khat"
+        commitish = "main"
     }
 }
- */
 /*
 // Publishes builds to a maven repository under `com.example:template:0.1.0+mc`
 publishing {
