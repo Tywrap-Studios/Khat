@@ -9,13 +9,14 @@ import kotlinx.coroutines.withContext
 import net.tassia.diskord.webhook.DiscordWebhook
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.compat.modifyToNegateMarkdown
+import org.tywrapstudios.khat.config.getGlobalConfig
 import org.tywrapstudios.khat.config.KhatSpec
 import java.nio.file.Path
 import kotlin.uuid.ExperimentalUuidApi
 
 suspend fun DiscordWebhook.sendLiteral(message: String, useEmbeds: Boolean) = execute {
     if (useEmbeds) embed {
-        color = KhatMod.GLOBAL_CONFIG[KhatSpec.DiscordSpec.embedColor]
+        color = getGlobalConfig()[KhatSpec.DiscordSpec.embedColor]
         footer(message, "TODO")
     } else {
         content = message
@@ -25,7 +26,7 @@ suspend fun DiscordWebhook.sendLiteral(message: String, useEmbeds: Boolean) = ex
 
 suspend fun DiscordWebhook.sendChatMessage(message: String, player: McPlayer, useEmbed: Boolean) = execute {
     if (useEmbed) embed {
-        color = KhatMod.GLOBAL_CONFIG[KhatSpec.DiscordSpec.embedColor]
+        color = getGlobalConfig()[KhatSpec.DiscordSpec.embedColor]
         footer("${player.name}: $message", "https://mc-heads.net/avatar/${player.uuid}/90")
     } else {
         content = "**${player.name.modifyToNegateMarkdown()}**: $message"

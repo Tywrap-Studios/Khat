@@ -19,15 +19,9 @@ import java.io.File
 object KhatMod : DedicatedServerModInitializer {
 	val LOGGER: Logger = LoggerFactory.getLogger("Khat")
 	const val VERSION: String =  /*$ mod_version*/"2.0.0"
-	const val MINECRAFT: String =  /*$ minecraft*/"1.20.1"
+	const val MINECRAFT: String =  /*$ minecraft*/"1.21.1"
 
 	val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
-
-	val GLOBAL_CONFIG get() = Config { addSpec(KhatSpec) }
-		.from.toml.file(File(FabricLoader.getInstance().configDir.toFile(), "khat.toml"), false)
-		.validateRequired()
-	val WEBHOOKS get() = GLOBAL_CONFIG[KhatSpec.DiscordSpec.webhooks]
-		.map { Webhook(it) }
 
     override fun onInitializeServer() {
 		registerEvents()

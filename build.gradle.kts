@@ -82,7 +82,23 @@ loom {
     runConfigs.all {
         ideConfigGenerated(true)
         vmArgs("-Dmixin.debug.export=true") // Exports transformed classes for debugging
-        runDir = "../../run" // Shares the run directory between versions
+    }
+    // Configure run directories to be per environment per version
+    // for dependency mods and to test on a versioned server with a
+    // "clean" client, uses "other" as the name if it can't detect
+    // the environment.
+    runConfigs.forEach {
+        var runDirectory: String? = null
+        if (it.environment == "client") {
+            runDirectory = "./run/client"
+        }
+        if (it.environment == "server") {
+            runDirectory = "./run/server"
+        }
+        if (runDirectory == null) {
+            runDirectory = "other"
+        }
+        it.runDir = runDirectory
     }
 }
 
