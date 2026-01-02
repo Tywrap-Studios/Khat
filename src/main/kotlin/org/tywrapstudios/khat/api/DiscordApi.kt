@@ -6,7 +6,7 @@ import gs.mclo.api.response.InsightsResponse
 import gs.mclo.api.response.UploadLogResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import net.tassia.diskord.webhook.DiscordWebhook
+import org.tywrapstudios.hookt.DiscordWebhook
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.compat.modifyToNegateMarkdown
 import org.tywrapstudios.khat.config.globalConfig
@@ -16,22 +16,20 @@ import kotlin.uuid.ExperimentalUuidApi
 
 suspend fun DiscordWebhook.sendLiteral(message: String, useEmbeds: Boolean) = execute {
     if (useEmbeds) embed {
-        color = globalConfig[DiscordSpec.embedColor]
+        rgb(globalConfig[DiscordSpec.embedColor])
         footer(message, "TODO")
     } else {
         content = message
     }
-    content += "" // Ensure at least something gets sent
 }
 
 suspend fun DiscordWebhook.sendChatMessage(message: String, player: McPlayer, useEmbed: Boolean) = execute {
     if (useEmbed) embed {
-        color = globalConfig[DiscordSpec.embedColor]
+        rgb(globalConfig[DiscordSpec.embedColor])
         footer("${player.name}: $message", "https://mc-heads.net/avatar/${player.uuid}/90")
     } else {
         content = "**${player.name.modifyToNegateMarkdown()}**: $message"
     }
-    content += "" // Ensure at least something gets sent
 }
 
 suspend fun DiscordWebhook.sendCrashMessage(error: Throwable, log: Path) {
@@ -44,24 +42,41 @@ suspend fun DiscordWebhook.sendCrashMessage(error: Throwable, log: Path) {
     execute {
         embed {
             title = "Minecraft experienced an exception!"
-            color = 7864320
-            field("Error", response?.error ?: error.message ?: "Unknown error", true)
+            rgb(7864320)
+            field {
+                name = "Error"
+                value = response?.error ?: error.message ?: "Unknown error"
+                inline = true
+            }
             if (response != null) {
-                field("Full log", "[[`${response.id}`](${response.url})]", true)
+                field {
+                    name = "Full log"
+                    value = "[[`${response.id}`](${response.url})]"
+                    inline = true
+                }
             }
             if (insights != null) {
-                field("Insights", """
+                field {
+                    name = "Insights"
+                    value = """
                     **Problems**
-                    ${insights.analysis.problems.joinToString("\n") { analysis ->
-                    "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name}):" +
-                        analysis.solutions.joinToString("\n", ">>Solutions:") { solution -> 
-                            ">>_${solution.message}_"
+                    ${
+                        insights.analysis.problems.joinToString("\n") { analysis ->
+                            "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name}):" + analysis.solutions.joinToString(
+                                "\n",
+                                ">>Solutions:"
+                            ) { solution ->
+                                ">>_${solution.message}_"
+                            }
                         }
-                }}
+                    }
                     **Information**
-                    ${insights.analysis.information.joinToString("\n") { information -> 
-                        "${information.label}: ${information.value}(${information.counter}x)"
-                }}""".trimIndent())
+                    ${
+                        insights.analysis.information.joinToString("\n") { information ->
+                            "${information.label}: ${information.value}(${information.counter}x)"
+                        }
+                    }""".trimIndent()
+                }
             }
         }
     }

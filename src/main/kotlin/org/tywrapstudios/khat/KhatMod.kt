@@ -11,11 +11,8 @@ import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.config.CONFIG_PATH
 import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.logic.HandleMinecraft
-import java.nio.file.CopyOption
 import java.nio.file.Files
 import kotlin.io.path.createDirectories
-import kotlin.io.path.createFile
-import kotlin.io.resolve
 
 object KhatMod : DedicatedServerModInitializer {
 	val LOGGER: Logger = LoggerFactory.getLogger("Khat")

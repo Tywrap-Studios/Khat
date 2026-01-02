@@ -55,10 +55,13 @@ dependencies {
     includeImplementation("com.uchuhimo:konf-toml:${property("deps.konf")}")
     // mclo.gs API
     includeImplementation("gs.mclo:api:${property("deps.mclogs")}")
-    // DC Webhook API
-    includeImplementation("com.github.talemke.diskord-webhooks:diskord-webhooks:${property("deps.diskord-webhooks")}")
+    // hookt
+    includeImplementation("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}")
     // Ktor
-    includeImplementation("io.ktor:ktor-client-java:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-core:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-cio:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-content-negotiation:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
 
     /* Compat */
     // Spark

@@ -2,10 +2,8 @@ package org.tywrapstudios.khat.config
 
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.source.toml
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.java.Java
 import net.fabricmc.loader.api.FabricLoader
-import net.tassia.diskord.webhook.Webhook
+import org.tywrapstudios.hookt.Webhook
 
 const val CONFIG_PATH = "khat/global.toml"
 
@@ -20,7 +18,5 @@ val globalConfig = Config {
 
 val webhooks get() = globalConfig[DiscordSpec.webhooks]
     .map {
-        Webhook(it) {
-            client = HttpClient(Java)
-        }
+        Webhook(it)
     }
