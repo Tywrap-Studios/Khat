@@ -1,8 +1,7 @@
 package org.tywrapstudios.khat.compat
 
-import org.tywrapstudios.khat.KhatMod
-import org.tywrapstudios.khat.config.getGlobalConfig
-import org.tywrapstudios.khat.config.KhatSpec
+import org.tywrapstudios.khat.config.globalConfig
+import org.tywrapstudios.khat.config.DiscordSpec
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +14,7 @@ fun String.modifyToNegateDangerousPings(): String {
 }
 
 fun String?.modifyForRoleMentions(): String {
-    val allowedRoles: MutableList<String> = getGlobalConfig()[KhatSpec.DiscordSpec.roles]
+    val allowedRoles: MutableList<String> = globalConfig[DiscordSpec.roles]
     val pattern: Pattern = Pattern.compile("<@&(\\d+)>")
     val matcher: Matcher = pattern.matcher(this)
 

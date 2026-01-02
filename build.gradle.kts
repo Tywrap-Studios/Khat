@@ -57,6 +57,8 @@ dependencies {
     includeImplementation("gs.mclo:api:${property("deps.mclogs")}")
     // DC Webhook API
     includeImplementation("com.github.talemke.diskord-webhooks:diskord-webhooks:${property("deps.diskord-webhooks")}")
+    // Ktor
+    includeImplementation("io.ktor:ktor-client-java:${property("deps.ktor")}")
 
     /* Compat */
     // Spark

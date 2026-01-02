@@ -18,6 +18,7 @@ stonecutter tasks {
 stonecutter parameters {
     swaps["mod_version"] = "\"${property("mod.version")}\""
     swaps["minecraft"] = "\"${node.metadata.version}\""
+    swaps["mod_id"] = "\"${property("mod.id")}\""
 
     replacements {
         string(current.parsed >= "1.21.11") {

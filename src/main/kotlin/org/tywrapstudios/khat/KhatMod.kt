@@ -1,41 +1,54 @@
 package org.tywrapstudios.khat
 
-import com.uchuhimo.konf.Config
-import com.uchuhimo.konf.source.toml
 import gs.mclo.api.MclogsClient
 import net.fabricmc.api.DedicatedServerModInitializer
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.tassia.diskord.webhook.Webhook
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.khat.api.McPlayer
-import org.tywrapstudios.khat.config.KhatSpec
+import org.tywrapstudios.khat.config.CONFIG_PATH
+import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.logic.HandleMinecraft
-import java.io.File
+import java.nio.file.CopyOption
+import java.nio.file.Files
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createFile
+import kotlin.io.resolve
 
 object KhatMod : DedicatedServerModInitializer {
 	val LOGGER: Logger = LoggerFactory.getLogger("Khat")
 	const val VERSION: String =  /*$ mod_version*/"2.0.0"
 	const val MINECRAFT: String =  /*$ minecraft*/"1.21.1"
+    const val MOD_ID: String = /*$ mod_id*/"ctd"
 
 	val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
 
     override fun onInitializeServer() {
+        if (!Files.exists(FabricLoader.getInstance().configDir.resolve(CONFIG_PATH))) {
+            val configPath = FabricLoader.getInstance().configDir.resolve(CONFIG_PATH)
+            configPath.parent.createDirectories()
+
+            Files.copy(
+                FabricLoader.getInstance().getModContainer(MOD_ID).get().findPath("default-configs/global.toml").get(),
+                configPath
+            )
+        }
+        globalConfig.validateRequired()
+
 		registerEvents()
     }
 
 	internal fun registerEvents() {
 		val console = McPlayer("Console", "console")
-		ServerLifecycleEvents.SERVER_STARTED.register(ServerLifecycleEvents.ServerStarted {
+		ServerLifecycleEvents.SERVER_STARTED.register {
 			HandleMinecraft.handleChatMessage("Server started.", console)
-		})
+		}
 
-		ServerLifecycleEvents.SERVER_STOPPED.register(ServerLifecycleEvents.ServerStopped {
+		ServerLifecycleEvents.SERVER_STOPPED.register {
 			HandleMinecraft.handleChatMessage("Server stopped.", console)
-		})
+		}
 
 		ServerMessageEvents.CHAT_MESSAGE.register { signedMessage, serverPlayerEntity, _ ->
             val message: String = signedMessage.decoratedContent().string

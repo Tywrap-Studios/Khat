@@ -2,33 +2,25 @@ package org.tywrapstudios.khat.config
 
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.source.toml
-import com.uchuhimo.konf.source.toml.toToml
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.java.Java
 import net.fabricmc.loader.api.FabricLoader
 import net.tassia.diskord.webhook.Webhook
-import java.io.File
-import java.nio.file.Path
-import kotlin.io.path.createDirectories
 
-private fun getConfigDirectory(): Path {
-    return FabricLoader.getInstance().configDir.resolve("khat").createDirectories()
+const val CONFIG_PATH = "khat/global.toml"
+
+val globalConfig = Config {
+    addSpec(KhatSpec)
+    addSpec(DiscordSpec)
 }
+    .from.toml.resource("default-configs/global.toml")
+    .from.toml.watchFile(FabricLoader.getInstance().configDir.resolve(CONFIG_PATH).toFile())
+    .from.env()
+    .from.systemProperties()
 
-private fun getMainConfig(): File {
-    val file = File(getConfigDirectory().toFile(), "global.toml")
-    file.createNewFile()
-    return file
-}
-
-private val GLOBAL_CONFIG get() = Config { addSpec(KhatSpec) }
-//        .from.toml.resource("/default-configs/global.toml", false)
-    .from.toml.watchFile(getMainConfig(), 5, optional = false)
-    .validateRequired()
-
-fun getGlobalConfig(): Config {
-    GLOBAL_CONFIG
-        .toToml
-        .toFile(getMainConfig())
-    return GLOBAL_CONFIG
-}
-val WEBHOOKS get() = getGlobalConfig()[KhatSpec.DiscordSpec.webhooks]
-    .map { Webhook(it) }
+val webhooks get() = globalConfig[DiscordSpec.webhooks]
+    .map {
+        Webhook(it) {
+            client = HttpClient(Java)
+        }
+    }

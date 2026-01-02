@@ -11,7 +11,7 @@
   "contact": {
     "homepage": "https://github.com/Tywrap-Studios/Khat",
     "sources": "https://github.com/Tywrap-Studios/Khat",
-    "issues": "https://github.com/Tywrap-Studios/Khat"
+    "issues": "https://github.com/Tywrap-Studios/Khat/issues"
   },
   "license": "TYSPAL-2.0",
   "icon": "assets/${id}/icon.png",
