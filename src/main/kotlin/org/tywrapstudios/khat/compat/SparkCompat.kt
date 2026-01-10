@@ -5,22 +5,21 @@ package org.tywrapstudios.khat.compat
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.tywrapstudios.hookt.DiscordWebhook
-import org.tywrapstudios.khat.config.DiscordSpec
-import org.tywrapstudios.khat.config.globalConfig
+import org.tywrapstudios.khat.api.ConfiguredWebhook
+import org.tywrapstudios.khat.config.WebhookSpec
 import org.tywrapstudios.khat.config.webhooks
 import java.util.concurrent.TimeoutException
 
 fun handleSparkWorldTimeOut(e: TimeoutException) = GlobalScope.launch {
-    if (globalConfig[DiscordSpec.onlyMessages]) return@launch
     webhooks
         .forEach {
+            if (it.config[WebhookSpec.onlyMessages]) return@forEach
             it.sendTimeOutMessage()
         }
     e.printStackTrace()
 }
 
-private suspend fun DiscordWebhook.sendTimeOutMessage() = execute {
+private suspend fun ConfiguredWebhook.sendTimeOutMessage() = webhook.execute {
     embed {
         title = "Spark Profiler"
         rgb(7864320)

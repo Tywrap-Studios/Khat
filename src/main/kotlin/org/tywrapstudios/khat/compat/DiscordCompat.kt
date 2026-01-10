@@ -1,22 +1,24 @@
 package org.tywrapstudios.khat.compat
 
-import org.tywrapstudios.khat.config.globalConfig
-import org.tywrapstudios.khat.config.DiscordSpec
+import com.uchuhimo.konf.Config
+import org.tywrapstudios.hookt.Webhook
+import org.tywrapstudios.khat.api.ConfiguredWebhook
+import org.tywrapstudios.khat.config.WebhookSpec
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-fun String.modifyToNegateDangerousPings(): String {
+fun String.modifyToNegateDangerousPings(config: Config): String {
     var message = this
     message = message.replace("@everyone", "`@everyone`[ping negated]")
     message = message.replace("@here", "`@here`[ping negated]")
-    message = message.modifyForRoleMentions()
+    message = message.modifyForRoleMentions(config)
     return message
 }
 
-fun String?.modifyForRoleMentions(): String {
-    val allowedRoles: MutableList<String> = globalConfig[DiscordSpec.roles]
+fun String?.modifyForRoleMentions(config: Config): String {
+    val allowedRoles: MutableList<String> = config[WebhookSpec.pingRoles]
     val pattern: Pattern = Pattern.compile("<@&(\\d+)>")
-    val matcher: Matcher = pattern.matcher(this)
+    val matcher: Matcher = pattern.matcher(this as CharSequence)
 
     val modifiedMessage = StringBuilder()
 

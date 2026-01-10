@@ -3,21 +3,6 @@
 # for the current instance of the bot. Automatic migrations might be made in order
 # to keep you updated, so do NOT manually change this!
 version = "3.0"
-
-[discord]
 # A list with strings with webhook endpoint URLs
 # See: https://tywrap-studios.tiazzz.me/r/webhooks
 webhooks = []
-# Whether to only send chat messages sent by players, and not "game" messages
-# such as joins, leaves and deaths.
-onlyMessages = false
-# Whether to use embeds instead of plain text, this is generally a little
-# clunkier but opens up the possibility of using visuals like player heads.
-embedMode = false
-# An RGB int, this is one number, not three! (`255, 255, 255` type of thing.)
-# Use this site if you want to use this feature:
-# http://www.shodor.org/~efarrow/trunk/html/rgbint.html
-embedColor = 5489270
-# A list with strings with role IDs that users are allowed to ping from the
-# server.
-roles = []

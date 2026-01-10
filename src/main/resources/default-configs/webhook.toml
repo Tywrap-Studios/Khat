@@ -1,0 +1,15 @@
+[webhook]
+# Whether to only send chat messages sent by players, and not "game" messages
+# such as joins, leaves and deaths.
+onlyMessages = false
+# Whether to use rich embeds instead of plain content for the messages.
+# This is generally bigger and clunkier, but opens up player heads.
+useEmbeds = false
+# Whether to use Discord's Components V2 instead of plain content for the messages.
+# Can only be used if [useEmbeds] is set to false.
+useComponents = false
+# The primary colour (hex value) to use throughout the mod.
+primaryColor = "#A2EDFF"
+# A list with strings with role IDs that users are allowed to ping from the
+# server.
+pingRoles = []

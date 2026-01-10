@@ -6,40 +6,39 @@ import gs.mclo.api.response.InsightsResponse
 import gs.mclo.api.response.UploadLogResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.tywrapstudios.hookt.DiscordWebhook
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.compat.modifyToNegateMarkdown
-import org.tywrapstudios.khat.config.globalConfig
-import org.tywrapstudios.khat.config.DiscordSpec
+import org.tywrapstudios.khat.config.WebhookSpec
+import org.tywrapstudios.khat.config.id
 import java.nio.file.Path
 import kotlin.uuid.ExperimentalUuidApi
 
-suspend fun DiscordWebhook.sendLiteral(message: String, useEmbeds: Boolean) = execute {
+suspend fun ConfiguredWebhook.sendLiteral(message: String, useEmbeds: Boolean) = webhook.execute {
     if (useEmbeds) embed {
-        rgb(globalConfig[DiscordSpec.embedColor])
+        hex(config[WebhookSpec.primaryColor])
         footer(message, "TODO")
     } else {
         content = message
     }
 }
 
-suspend fun DiscordWebhook.sendChatMessage(message: String, player: McPlayer, useEmbed: Boolean) = execute {
+suspend fun ConfiguredWebhook.sendChatMessage(message: String, player: McPlayer, useEmbed: Boolean) = webhook.execute {
     if (useEmbed) embed {
-        rgb(globalConfig[DiscordSpec.embedColor])
+        hex(config[WebhookSpec.primaryColor])
         footer("${player.name}: $message", "https://mc-heads.net/avatar/${player.uuid}/90")
     } else {
         content = "**${player.name.modifyToNegateMarkdown()}**: $message"
     }
 }
 
-suspend fun DiscordWebhook.sendCrashMessage(error: Throwable, log: Path) {
+suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
     val response: UploadLogResponse? = withContext(Dispatchers.IO) {
         KhatMod.MCL.uploadLog(log).get()
     }
     val insights: InsightsResponse? = withContext(Dispatchers.IO) {
         response?.insights?.get()
     }
-    execute {
+    webhook.execute {
         embed {
             title = "Minecraft experienced an exception!"
             rgb(7864320)

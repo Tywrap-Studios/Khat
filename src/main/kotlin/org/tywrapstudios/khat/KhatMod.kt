@@ -4,15 +4,11 @@ import gs.mclo.api.MclogsClient
 import net.fabricmc.api.DedicatedServerModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
-import net.fabricmc.loader.api.FabricLoader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.khat.api.McPlayer
-import org.tywrapstudios.khat.config.CONFIG_PATH
-import org.tywrapstudios.khat.config.globalConfig
+import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.logic.HandleMinecraft
-import java.nio.file.Files
-import kotlin.io.path.createDirectories
 
 object KhatMod : DedicatedServerModInitializer {
 	val LOGGER: Logger = LoggerFactory.getLogger("Khat")
@@ -23,16 +19,7 @@ object KhatMod : DedicatedServerModInitializer {
 	val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
 
     override fun onInitializeServer() {
-        if (!Files.exists(FabricLoader.getInstance().configDir.resolve(CONFIG_PATH))) {
-            val configPath = FabricLoader.getInstance().configDir.resolve(CONFIG_PATH)
-            configPath.parent.createDirectories()
-
-            Files.copy(
-                FabricLoader.getInstance().getModContainer(MOD_ID).get().findPath("default-configs/global.toml").get(),
-                configPath
-            )
-        }
-        globalConfig.validateRequired()
+        initializeConfigs()
 
 		registerEvents()
     }
