@@ -8,6 +8,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.config.initializeConfigs
+import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.logic.HandleMinecraft
 
 object KhatMod : DedicatedServerModInitializer {
@@ -20,6 +21,7 @@ object KhatMod : DedicatedServerModInitializer {
 
     override fun onInitializeServer() {
         initializeConfigs()
+        MigrateV2.attemptMigrate()
 
 		registerEvents()
     }

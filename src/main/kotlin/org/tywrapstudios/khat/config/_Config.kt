@@ -11,8 +11,9 @@ import org.tywrapstudios.khat.api.ConfiguredWebhook
 import java.nio.file.Files
 import kotlin.io.path.createDirectories
 
-const val GLOBAL_PATH = "khat/global.toml"
-const val WEBHOOK_PATH = "khat/webhooks/"
+const val CONFIG_PATH = "khat/"
+const val GLOBAL_PATH = "${CONFIG_PATH}global.toml"
+const val WEBHOOK_PATH = "${CONFIG_PATH}webhooks/"
 
 lateinit var globalConfig: Config
 
