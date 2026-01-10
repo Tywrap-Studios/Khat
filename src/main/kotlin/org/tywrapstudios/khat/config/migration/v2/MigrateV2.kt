@@ -31,7 +31,7 @@ object MigrateV2 {
         val migrationPath = FabricLoader.getInstance()
             .configDir
             .resolve(CONFIG_PATH)
-            .resolve(".migrate/v2/${file.hashCode()}.json")
+            .resolve(".migrate/v2/${file.hashCode().toHexString()}.json")
         migrationPath.parent.createDirectories()
         if (!Files.exists(migrationPath)) {
             Files.copy(
@@ -80,6 +80,7 @@ object MigrateV2 {
             it.append("# Migrations")
             it.appendLine()
             it.append("Your configs have been migrated from 2.0 to 3.0.")
+            it.appendLine()
             it.appendLine()
             it.append("""This means the following:
                 |- Your new 3.0 config files contain values from your previous setup;
