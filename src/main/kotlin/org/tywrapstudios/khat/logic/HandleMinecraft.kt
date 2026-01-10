@@ -22,7 +22,7 @@ object HandleMinecraft {
             KhatMod.LOGGER.info("Name: ${WebhookSpec.onlyMessages.path} (${it.id})")
             if (it.config[WebhookSpec.onlyMessages] && player.uuid == "console") return@launch
             val message = message.handleAll(it.config)
-            it.sendChatMessage(message, player, it.config[WebhookSpec.useEmbeds])
+            it.sendChatMessage(message, player)
         }
     }
 
@@ -34,7 +34,7 @@ object HandleMinecraft {
             if (it.config[WebhookSpec.useEmbeds]) {
                 message = "**$message**"
             }
-            it.sendLiteral(message, useEmbeds)
+            it.sendLiteral(message)
         }
     }
 
