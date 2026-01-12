@@ -2,11 +2,13 @@ package org.tywrapstudios.khat
 
 import gs.mclo.api.MclogsClient
 import net.fabricmc.api.DedicatedServerModInitializer
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.khat.api.McPlayer
+import org.tywrapstudios.khat.command.CommandImpl
 import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.logic.HandleMinecraft
@@ -54,8 +56,8 @@ object KhatMod : DedicatedServerModInitializer {
             HandleMinecraft.handleChatMessage(message, McPlayer(authorName, authorUuid))
         }
 
-//		CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-//			CTDCommand.register(dispatcher)
-//		}
+		CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
+			CommandImpl.register(dispatcher)
+		}
 	}
 }
