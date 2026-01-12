@@ -20,6 +20,7 @@ import kotlin.Int
 import kotlin.io.path.writer
 import kotlin.text.trimIndent
 
+@Suppress("unused")
 object CommandExecutions {
     internal fun root(context: CommandContext<CommandSourceStack>): Int {
         val source = context.getSource()
