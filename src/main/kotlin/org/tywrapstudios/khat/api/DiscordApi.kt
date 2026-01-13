@@ -6,7 +6,6 @@ import gs.mclo.api.response.InsightsResponse
 import gs.mclo.api.response.UploadLogResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.tywrapstudios.hookt.types.components.SectionComponent
 import org.tywrapstudios.hookt.types.components.SeparatorComponent
 import org.tywrapstudios.hookt.types.components.TextDisplayComponent
 import org.tywrapstudios.khat.KhatMod
@@ -19,7 +18,7 @@ suspend fun ConfiguredWebhook.sendLiteral(message: String) = webhook.execute {
     if (config[WebhookSpec.useEmbeds]) {
         embed {
             hex(config[WebhookSpec.primaryColor])
-            footer(message, "TODO")
+            footer(message)
         }
     } else if(config[WebhookSpec.useComponents]) {
         component<TextDisplayComponent>{
@@ -68,27 +67,29 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                     content = "**Full log**: [[`${response.id}`](${response.url})]"
                 }
             }
-            if (insights != null) {
+            if (insights != null && (insights.analysis.problems.isNotEmpty() || insights.analysis.information.isNotEmpty())) {
                 component<SeparatorComponent> {
                     divider = true
                 }
-                component<SectionComponent> {
-                    addComponent<TextDisplayComponent> {
-                        content = "# Insights"
-                    }
-                    addComponent<TextDisplayComponent> {
+                component<TextDisplayComponent> {
+                    content = "# Insights"
+                }
+                if (insights.analysis.problems.isNotEmpty()) {
+                    component<TextDisplayComponent> {
                         content = """## Problems
                     ${
                             insights.analysis.problems.joinToString("\n") { analysis ->
-                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name}):" + analysis.solutions.joinToString(
-                                    "\n", "### Solutions:"
+                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name})" + analysis.solutions.joinToString(
+                                    "\n", ":\n### Solutions:"
                                 ) { solution ->
                                     ">>_${solution.message}_"
                                 }
                             }
                         }""".trimIndent()
                     }
-                    addComponent<TextDisplayComponent> {
+                }
+                if (insights.analysis.information.isNotEmpty()) {
+                    component<TextDisplayComponent> {
                         content = """## Information
                     ${
                             insights.analysis.information.joinToString("\n") { information ->
@@ -114,27 +115,32 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                         inline = true
                     }
                 }
-                if (insights != null) {
+                if (insights != null && (insights.analysis.problems.isNotEmpty() || insights.analysis.information.isNotEmpty())) {
                     field {
                         name = "Insights"
-                        value = """
+                        val problems = """
                     **Problems**
                     ${
                             insights.analysis.problems.joinToString("\n") { analysis ->
                                 "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name}):" + analysis.solutions.joinToString(
-                                    "\n",
-                                    ">>Solutions:"
+                                    "\n", ">>Solutions:"
                                 ) { solution ->
                                     ">>_${solution.message}_"
                                 }
                             }
-                        }
-                    **Information**
+                        }"""
+                        val information = """**Information**
                     ${
                             insights.analysis.information.joinToString("\n") { information ->
                                 "${information.label}: ${information.value}(${information.counter}x)"
                             }
                         }""".trimIndent()
+                        if (insights.analysis.problems.isNotEmpty()) {
+                            value += problems
+                        }
+                        if (insights.analysis.information.isNotEmpty()) {
+                            value += information
+                        }
                     }
                 }
             }

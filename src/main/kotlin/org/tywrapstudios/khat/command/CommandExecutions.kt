@@ -17,6 +17,7 @@ import org.tywrapstudios.khat.logic.HandleMinecraft
 import java.nio.file.Files
 import java.util.concurrent.TimeoutException
 import kotlin.Int
+import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
 import kotlin.text.trimIndent
 
@@ -74,6 +75,7 @@ object CommandExecutions {
         val path = FabricLoader.getInstance()
             .gameDir
             .resolve(".debug/khat/")
+        path.createDirectories()
         val file = Files.createTempFile(path, "debug-crash", ".log")
         file.writer().use {
             it.write("Debug")

@@ -30,7 +30,6 @@ object HandleMinecraft {
         webhooks.forEach {
             if (it.config[WebhookSpec.onlyMessages]) return@launch
             var message = message.handleAll(it.config)
-            val useEmbeds = it.config[WebhookSpec.useEmbeds]
             if (it.config[WebhookSpec.useEmbeds]) {
                 message = "**$message**"
             }
