@@ -21,3 +21,4 @@ stonecutter {
 }
 
 rootProject.name = "Khat"
+include("kamera")
