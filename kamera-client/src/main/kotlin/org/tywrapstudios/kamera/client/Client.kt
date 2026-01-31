@@ -5,6 +5,7 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.http.encodedPath
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.runBlocking
 import kotlinx.rpc.krpc.ktor.client.KtorRpcClient
 import kotlinx.rpc.krpc.ktor.client.installKrpc
@@ -16,39 +17,57 @@ import org.tywrapstudios.kamera.api.CommandService
 import java.util.Scanner
 
 fun main() = runBlocking {
-    val ktorClient = HttpClient {
-        install(Auth) {
-            bearer {
-                loadTokens {
-                    BearerTokens("Testing101", null)
+    val scanner = Scanner(System.`in`)
+    while (isActive) {
+        try {
+            val ktorClient = createClient()
+            val client: KtorRpcClient = ktorClient.createRpc()
+            val command: CommandService = client.withService<CommandService>()
+
+            while (isActive) {
+                try {
+                    println(command.run(scanner.nextLine()))
+                } catch (e: IllegalStateException) {
+                    println("Error: $e")
+                    if (e.message?.contains("cancelled") == true) {
+                        break
+                    }
+                } catch (e: Throwable) {
+                    println("Error: $e")
                 }
             }
-        }
 
-        installKrpc {
-            serialization { json() }
+            ktorClient.close()
+        } catch (e: Throwable) {
+            println("Error: $e")
         }
     }
+}
 
-    val client: KtorRpcClient = ktorClient.rpc {
-        url {
-            host = "127.0.0.1"
-            port = 34230
-            encodedPath = "kamera"
-        }
-
-        rpcConfig {
-            serialization {
-                json()
+fun createClient() = HttpClient {
+    install(Auth) {
+        bearer {
+            loadTokens {
+                BearerTokens("Testing101", null)
             }
         }
     }
 
-    val command: CommandService = client.withService<CommandService>()
-    while (true) try {
-        val scanner = Scanner(System.`in`)
-        command.run(scanner.nextLine())
-    } catch (e: Throwable) {
-        println(e.message)
+    installKrpc {
+        serialization { json() }
+    }
+}
+
+fun HttpClient.createRpc() = this.rpc {
+    url {
+        host = "127.0.0.1"
+        port = 34230
+        encodedPath = "kamera"
+    }
+
+    rpcConfig {
+        serialization {
+            json()
+        }
     }
 }

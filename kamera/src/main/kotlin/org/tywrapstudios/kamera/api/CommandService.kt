@@ -4,5 +4,5 @@ import kotlinx.rpc.annotations.Rpc
 
 @Rpc
 interface CommandService {
-    suspend fun run(command: String)
+    suspend fun run(command: String): String
 }
