@@ -2,6 +2,11 @@ package org.tywrapstudios.khat
 
 import gs.mclo.api.MclogsClient
 import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.basic
+import io.ktor.server.auth.bearer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.routing.routing
@@ -54,17 +59,35 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
         if (globalConfig[RpcSpec.enabled]) {
             RPC_JOB = KhatMod.launch {
                 embeddedServer(Netty, port = globalConfig[RpcSpec.port]) {
-                    install(Krpc)
-                    routing {
-                        rpc("/kamera") {
-                            rpcConfig {
-                                serialization {
-                                    json()
+                    install(Authentication) {
+                        bearer("rpc-auth") {
+                            if (globalConfig[RpcSpec.token].isEmpty()) {
+                                throw IllegalStateException("No token provided for RPC server.")
+                            }
+                            authenticate { credentials ->
+                                if (credentials.token == globalConfig[RpcSpec.token]) {
+                                    UserIdPrincipal("rpc-client")
+                                    LOGGER.info("RPC Client authenticated")
+                                } else {
+                                    null
                                 }
                             }
+                        }
+                    }
+                    install(Krpc)
 
-                            registerService<LinkService> { LinkServiceImpl() }
-                            registerService<CommandService> { CommandServiceImpl() }
+                    routing {
+                        authenticate("rpc-auth"){
+                            rpc("/kamera") {
+                                rpcConfig {
+                                    serialization {
+                                        json()
+                                    }
+                                }
+
+                                registerService<LinkService> { LinkServiceImpl() }
+                                registerService<CommandService> { CommandServiceImpl() }
+                            }
                         }
                     }
                     LOGGER.info("Started RPC server")

@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
     implementation("io.ktor:ktor-client-cio-jvm")
+    implementation("io.ktor:ktor-client-auth")
     implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-client:${property("deps.krpc")}")
     implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client:${property("deps.krpc")}")
     implementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:${property("deps.krpc")}")

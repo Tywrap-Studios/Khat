@@ -66,6 +66,7 @@ dependencies {
     includeImplementation("io.ktor:ktor-client-content-negotiation")
     includeImplementation("io.ktor:ktor-serialization-kotlinx-json")
     includeImplementation("io.ktor:ktor-server-netty-jvm")
+    includeImplementation("io.ktor:ktor-server-auth")
     // kRPC
     includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:${property("deps.krpc")}")
     includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:${property("deps.krpc")}")

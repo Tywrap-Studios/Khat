@@ -14,6 +14,8 @@ webhooks = []
 enabled = false
 # This is the port that the embedded RPC server runs on.
 port = 34230
+# This is the token (password) to access the RPC server.
+token = ""
 
 [rpc.feature]
 # Whether to enable the possibility to link UUIDs (Minecraft account IDs)
