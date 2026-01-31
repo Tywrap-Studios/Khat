@@ -6,3 +6,16 @@ version = "3.0"
 # A list with strings with webhook endpoint URLs
 # See: https://tywrap-studios.tiazzz.me/r/webhooks
 webhooks = []
+
+[rpc]
+# Whether to start an embedded kRPC server for incoming connections.
+# An example of an incoming connection is a Discord bot attempting to
+# send commands, messages or linking logic over to the server.
+enabled = false
+# This is the port that the embedded RPC server runs on.
+port = 34230
+
+[rpc.feature]
+# Whether to enable the possibility to link UUIDs (Minecraft account IDs)
+# to Discord IDs. This can be used for whitelisting.
+linking = false

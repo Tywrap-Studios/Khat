@@ -1,6 +1,9 @@
 plugins {
     id("net.fabricmc.fabric-loom-remap")
-    id("org.jetbrains.kotlin.jvm") version "2.3.0"
+    kotlin("jvm") version "2.3.0"
+    kotlin("plugin.serialization") version "2.3.0"
+    id("io.ktor.plugin") version "3.3.2"
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
 
     // `maven-publish`
      id("me.modmuss50.mod-publish-plugin") version "1.1.0"
@@ -39,7 +42,7 @@ dependencies {
         for (it in modules) modImplementation(fabricApi.module(it, property("deps.fabric_api") as String))
     }
 
-    fun DependencyHandlerScope.includeImplementation(dep: String) {
+    fun DependencyHandlerScope.includeImplementation(dep: Any) {
         implementation(dep)
         include(dep)
     }
@@ -58,10 +61,23 @@ dependencies {
     // hookt
     includeImplementation("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}")
     // Ktor
-    includeImplementation("io.ktor:ktor-client-core:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-client-cio:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-client-content-negotiation:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-core")
+    includeImplementation("io.ktor:ktor-client-cio")
+    includeImplementation("io.ktor:ktor-client-content-negotiation")
+    includeImplementation("io.ktor:ktor-serialization-kotlinx-json")
+    includeImplementation("io.ktor:ktor-server-netty-jvm")
+    // kRPC
+    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:${property("deps.krpc")}")
+    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:${property("deps.krpc")}")
+    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:${property("deps.krpc")}")
+    // kamera
+    includeImplementation(project(":kamera"))
+    // Exposed
+    includeImplementation("org.jetbrains.exposed:exposed-core:${property("deps.exposed")}")
+    includeImplementation("org.jetbrains.exposed:exposed-dao:${property("deps.exposed")}")
+    includeImplementation("org.jetbrains.exposed:exposed-java-time:${property("deps.exposed")}")
+    includeImplementation("org.jetbrains.exposed:exposed-jdbc:${property("deps.exposed")}")
+    includeImplementation("org.jetbrains.exposed:exposed-json:${property("deps.exposed")}")
 
     /* Compat */
     // Spark

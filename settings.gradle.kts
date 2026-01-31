@@ -22,3 +22,4 @@ stonecutter {
 
 rootProject.name = "Khat"
 include("kamera")
+include("kamera-client")

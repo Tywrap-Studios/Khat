@@ -13,10 +13,10 @@ import kotlin.uuid.Uuid
 interface LinkService {
     suspend fun generateCode(uuid: Uuid, snowflake: ULong): LinkCode
     suspend fun getLinkStatus(uuid: Uuid): LinkStatus
-    suspend fun getLinkStatus(snowflake: ULong): LinkStatus
+//    suspend fun getLinkStatus(snowflake: ULong): LinkStatus
     suspend fun attemptVerification(uuid: Uuid, code: String): VerificationResult
     suspend fun forceVerification(uuid: Uuid): VerificationResult
-    suspend fun forceVerification(snowflake: ULong): VerificationResult
+//    suspend fun forceVerification(snowflake: ULong): VerificationResult
 }
 
 @Serializable
