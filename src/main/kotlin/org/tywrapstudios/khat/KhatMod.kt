@@ -5,7 +5,6 @@ import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.basic
 import io.ktor.server.auth.bearer
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -34,6 +33,7 @@ import org.tywrapstudios.khat.config.RpcSpec
 import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.config.migration.v2.MigrateV2
+import org.tywrapstudios.khat.database.DatabaseManager
 import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
 import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
@@ -103,6 +103,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 		val console = McPlayer("Console", "console")
 		ServerLifecycleEvents.SERVER_STARTED.register {
             SERVER = it
+//            DatabaseManager.setup()
 			HandleMinecraft.handleChatMessage("Server started.", console)
 		}
 

@@ -79,6 +79,7 @@ dependencies {
     includeImplementation("org.jetbrains.exposed:exposed-java-time:${property("deps.exposed")}")
     includeImplementation("org.jetbrains.exposed:exposed-jdbc:${property("deps.exposed")}")
     includeImplementation("org.jetbrains.exposed:exposed-json:${property("deps.exposed")}")
+//    includeImplementation("org.xerial:sqlite-jdbc:${property("deps.sqlite-jdbc")}")
 
     /* Compat */
     // Spark
