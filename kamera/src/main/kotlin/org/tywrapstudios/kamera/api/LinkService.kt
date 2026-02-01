@@ -11,12 +11,15 @@ import kotlin.uuid.Uuid
 
 @Rpc
 interface LinkService {
-    suspend fun generateCode(uuid: Uuid, snowflake: ULong): LinkCode
-    suspend fun getLinkStatus(uuid: Uuid): LinkStatus
-//    suspend fun getLinkStatus(snowflake: ULong): LinkStatus
+    suspend fun generateCode(uuid: Uuid, snowflake: ULong): LinkCode?
+    suspend fun getLinkStatus(uuid: Uuid): LinkStatus?
+    suspend fun getLinkStatusBySnowflake(snowflake: ULong): LinkStatus?
     suspend fun attemptVerification(uuid: Uuid, code: String): VerificationResult
-    suspend fun forceVerification(uuid: Uuid): VerificationResult
-//    suspend fun forceVerification(snowflake: ULong): VerificationResult
+    suspend fun forceVerification(uuid: Uuid, snowflake: ULong): VerificationResult
+    suspend fun forceExisting(uuid: Uuid): VerificationResult
+    suspend fun forceExistingBySnowflake(snowflake: ULong): VerificationResult
+    suspend fun unlink(uuid: Uuid): Boolean
+    suspend fun unlinkBySnowflake(snowflake: ULong): Boolean
 }
 
 @Serializable
@@ -32,6 +35,7 @@ data class VerificationResult(
     val reason: String?,
 )
 
+@Serializable
 data class LinkCode(
     val code: String,
     val expires: Instant,
