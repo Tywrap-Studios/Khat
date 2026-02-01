@@ -13,6 +13,7 @@ import kotlinx.rpc.krpc.ktor.client.rpc
 import kotlinx.rpc.krpc.ktor.client.rpcConfig
 import kotlinx.rpc.krpc.serialization.json.json
 import kotlinx.rpc.withService
+import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
 import java.util.Scanner
 
@@ -22,11 +23,17 @@ fun main() = runBlocking {
         try {
             val ktorClient = createClient()
             val client: KtorRpcClient = ktorClient.createRpc()
-            val command: CommandService = client.withService<CommandService>()
 
             while (isActive) {
                 try {
-                    println(command.run(scanner.nextLine()))
+                    val nextLine = scanner.nextLine()
+                    if (nextLine.startsWith(">>ch")) {
+                        client.withService<ChatService>()
+                            .sendMessage("Test", nextLine.replace(">>ch ", ""))
+                    } else {
+                        println(client.withService<CommandService>()
+                            .run(scanner.nextLine()))
+                    }
                 } catch (e: IllegalStateException) {
                     println("Error: $e")
                     if (e.message?.contains("cancelled") == true) {
@@ -38,6 +45,7 @@ fun main() = runBlocking {
             }
 
             ktorClient.close()
+            client.close()
         } catch (e: Throwable) {
             println("Error: $e")
         }

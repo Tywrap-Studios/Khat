@@ -35,6 +35,7 @@ import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.CommandServiceImpl
+import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import kotlin.coroutines.CoroutineContext
 
@@ -87,6 +88,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 
                                 registerService<LinkService> { LinkServiceImpl() }
                                 registerService<CommandService> { CommandServiceImpl() }
+                                registerService<ChatService> { ChatServiceImpl() }
                             }
                         }
                     }
