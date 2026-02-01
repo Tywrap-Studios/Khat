@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.message.v1.ServerMessageEvents
 import net.minecraft.server.MinecraftServer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
 import org.tywrapstudios.kamera.api.LinkService
 import org.tywrapstudios.khat.api.McPlayer
@@ -34,8 +35,8 @@ import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.logic.HandleMinecraft
-import org.tywrapstudios.khat.platform.kamera.CommandServiceImpl
 import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
+import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import kotlin.coroutines.CoroutineContext
 
