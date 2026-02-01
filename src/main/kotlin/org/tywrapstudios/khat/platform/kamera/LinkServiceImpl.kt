@@ -19,7 +19,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-class LinkServiceImpl : LinkService {
+object LinkServiceImpl : LinkService {
     override suspend fun generateCode(
         uuid: Uuid,
         snowflake: ULong
@@ -62,6 +62,7 @@ class LinkServiceImpl : LinkService {
                 status = LinkStatus(
                     it[LinkTable.uuid],
                     it[LinkTable.id],
+                    it[LinkTable.expires],
                     it[LinkTable.verified]
                 )
             }
@@ -80,6 +81,7 @@ class LinkServiceImpl : LinkService {
                 status = LinkStatus(
                     it[LinkTable.uuid],
                     it[LinkTable.id],
+                    it[LinkTable.expires],
                     it[LinkTable.verified]
                 )
             }
@@ -92,7 +94,7 @@ class LinkServiceImpl : LinkService {
         uuid: Uuid,
         code: String
     ): VerificationResult {
-        var result = VerificationResult(false, null)
+        var result = VerificationResult(false, "")
         transaction {
             SchemaUtils.create(LinkTable)
 
@@ -119,9 +121,9 @@ class LinkServiceImpl : LinkService {
                             link[LinkTable.code] = "0000000000000000"
                             link[LinkTable.verified] = true
                         }
-                        result = VerificationResult(true, null)
+                        result = VerificationResult(true, "User successfully linked!")
                     } catch (e: Exception) {
-                        result = VerificationResult(false, e.message)
+                        result = VerificationResult(false, "Error: ${e.message}")
                     }
                 }
             }
@@ -130,7 +132,7 @@ class LinkServiceImpl : LinkService {
     }
 
     override suspend fun forceVerification(uuid: Uuid, snowflake: ULong): VerificationResult {
-        var result = VerificationResult(false, null)
+        var result = VerificationResult(false, "")
         transaction {
             SchemaUtils.create(LinkTable)
 
@@ -141,13 +143,13 @@ class LinkServiceImpl : LinkService {
                 it[LinkTable.expires] = Clock.System.now()
                 it[LinkTable.verified] = true
             }
-            result = VerificationResult(true, null)
+            result = VerificationResult(true, "User successfully linked!")
         }
         return result
     }
 
     override suspend fun forceExisting(uuid: Uuid): VerificationResult {
-        var result = VerificationResult(false, null)
+        var result = VerificationResult(false, "")
         transaction {
             SchemaUtils.create(LinkTable)
 
@@ -173,7 +175,7 @@ class LinkServiceImpl : LinkService {
     }
 
     override suspend fun forceExistingBySnowflake(snowflake: ULong): VerificationResult {
-        var result = VerificationResult(false, null)
+        var result = VerificationResult(false, "")
         transaction {
             SchemaUtils.create(LinkTable)
 

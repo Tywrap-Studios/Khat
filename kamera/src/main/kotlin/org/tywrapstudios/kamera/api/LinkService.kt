@@ -26,13 +26,14 @@ interface LinkService {
 data class LinkStatus(
     val uuid: Uuid,
     val snowflake: ULong,
+    val expires: Instant,
     val verified: Boolean,
 )
 
 @Serializable
 data class VerificationResult(
     val success: Boolean,
-    val reason: String?,
+    val message: String,
 )
 
 @Serializable

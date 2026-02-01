@@ -4,7 +4,7 @@ import net.minecraft.server.dedicated.DedicatedServer
 import org.tywrapstudios.kamera.api.CommandService
 import org.tywrapstudios.khat.KhatMod
 
-class CommandServiceImpl : CommandService {
+object CommandServiceImpl : CommandService {
     private val source = MRpcCommandSource(KhatMod.SERVER)
 
     override suspend fun run(command: String): String {

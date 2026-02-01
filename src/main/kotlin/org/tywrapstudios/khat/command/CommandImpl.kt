@@ -1,8 +1,11 @@
 package org.tywrapstudios.khat.command
 
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.StringArgumentType
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
+import net.minecraft.commands.arguments.GameProfileArgument
+import net.minecraft.commands.arguments.UuidArgument
 
 object CommandImpl {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
@@ -19,28 +22,74 @@ object CommandImpl {
             .build()
 
         val dumpConfig = Commands
-            .literal("dump_config")
+            .literal("dump-config")
             .executes(CommandExecutions::dumpConfig)
             .build()
 
         val forceChat = Commands
-            .literal("force_chat")
+            .literal("force-chat")
             .executes(CommandExecutions::forceChatMessage)
             .build()
 
         val forceGame = Commands
-            .literal("force_game")
+            .literal("force-game")
             .executes(CommandExecutions::forceGameMessage)
             .build()
 
         val forceCrash = Commands
-            .literal("force_crash_message")
+            .literal("force-crash-message")
             .executes(CommandExecutions::forceCrashMessage)
             .build()
 
         val forceTimeout = Commands
-            .literal("force_timeout_message")
+            .literal("force-timeout-message")
             .executes(CommandExecutions::forceTimeoutMessage)
+            .build()
+
+        val link = Commands
+            .literal("link")
+            .executes(CommandExecutions::link)
+            .build()
+
+        val codeArg = Commands
+            .argument("code", StringArgumentType.greedyString())
+            .build()
+
+        val verify = Commands
+            .literal("verify")
+            .then(codeArg)
+            .executes(CommandExecutions::verify)
+            .build()
+
+        val uuidArg = Commands
+            .argument("uuid", UuidArgument.uuid())
+            .build()
+
+        val idArg = Commands
+            .argument("id", StringArgumentType.word())
+            .build()
+
+        val forceLink = Commands
+            .literal("force-link")
+            .requires { source ->
+                source.hasPermission(3)
+            }
+            .then(uuidArg)
+            .then(idArg)
+            .executes(CommandExecutions::forceLink)
+            .build()
+
+        val targetArg = Commands
+            .argument("target", GameProfileArgument.gameProfile())
+            .build()
+
+        val viewLink = Commands
+            .literal("view-link")
+            .requires { source ->
+                source.hasPermission(3)
+            }
+            .then(targetArg)
+            .executes(CommandExecutions::viewLink)
             .build()
 
         /* Debug */
@@ -50,6 +99,12 @@ object CommandImpl {
         debug.addChild(forceGame)
         debug.addChild(forceCrash)
         debug.addChild(forceTimeout)
+
+        /* Link */
+        root.addChild(link)
+        link.addChild(verify)
+        link.addChild(forceLink)
+        link.addChild(viewLink)
 
         /* Root */
         dispatcher.root.addChild(root)

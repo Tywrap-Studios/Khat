@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.ChatVisiblity
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.khat.KhatMod
 
-class ChatServiceImpl : ChatService {
+object ChatServiceImpl : ChatService {
     override suspend fun sendMessage(name: String, message: String) {
         for (player in KhatMod.SERVER.playerList.players) {
             if (player.chatVisibility != ChatVisiblity.FULL) {

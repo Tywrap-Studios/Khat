@@ -87,9 +87,9 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                                     }
                                 }
 
-                                registerService<LinkService> { LinkServiceImpl() }
-                                registerService<CommandService> { CommandServiceImpl() }
-                                registerService<ChatService> { ChatServiceImpl() }
+                                registerService<LinkService> { LinkServiceImpl }
+                                registerService<CommandService> { CommandServiceImpl }
+                                registerService<ChatService> { ChatServiceImpl }
                             }
                         }
                     }

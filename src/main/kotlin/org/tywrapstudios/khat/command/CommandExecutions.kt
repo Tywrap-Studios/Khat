@@ -1,10 +1,18 @@
+@file:OptIn(ExperimentalUuidApi::class, ExperimentalCoroutinesApi::class)
+
 package org.tywrapstudios.khat.command
 
+import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.uchuhimo.konf.source.toml.toToml
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.datetime.toDateTimePeriod
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandSourceStack
+import net.minecraft.commands.arguments.GameProfileArgument
+import net.minecraft.commands.arguments.UuidArgument
 import net.minecraft.network.chat.Component
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.api.McPlayer
@@ -14,15 +22,24 @@ import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.config.id
 import org.tywrapstudios.khat.config.webhooks
 import org.tywrapstudios.khat.logic.HandleMinecraft
+import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import java.nio.file.Files
 import java.util.concurrent.TimeoutException
 import kotlin.Int
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
 import kotlin.text.trimIndent
+import kotlin.time.Clock
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.toKotlinUuid
 
 @Suppress("unused")
 object CommandExecutions {
+
+    /*
+     *  ROOT
+     */
+
     internal fun root(context: CommandContext<CommandSourceStack>): Int {
         val source = context.getSource()
         val message = """
@@ -37,6 +54,10 @@ object CommandExecutions {
         }, false)
         return 1
     }
+
+    /*
+     *  DEBUG
+     */
 
     internal fun dumpConfig(context: CommandContext<CommandSourceStack>): Int {
         val source = context.getSource()
@@ -86,6 +107,122 @@ object CommandExecutions {
 
     internal fun forceTimeoutMessage(context: CommandContext<CommandSourceStack>): Int {
         handleSparkWorldTimeOut(TimeoutException("Debug timeout"))
+        return 1
+    }
+
+    /*
+     *  LINK
+     */
+
+    internal fun link(context: CommandContext<CommandSourceStack>): Int {
+        val uuid = context.source.entityOrException.uuid.toKotlinUuid()
+
+        val status = KhatMod.async {
+            LinkServiceImpl.getLinkStatus(uuid)
+        }.getCompleted()
+
+        val source = context.source
+        if (status == null) {
+            source.sendSuccess(
+                {
+                    Component.literal("${uuid.toHexDashString()} is currently not linked or being linked.")
+                },
+                false
+            )
+        } else {
+            val expirationTime = status.expires - Clock.System.now()
+            var timeString = "Time left: N/A"
+            if (!expirationTime.isNegative()) {
+                timeString = "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
+            }
+            source.sendSuccess(
+                {
+                    Component.literal("""
+                        Link status for ${uuid.toHexDashString()}:
+                        Verified: ${status.verified}
+                        $timeString
+                        Linked to ${status.snowflake}
+                    """.trimIndent())
+                },
+                false
+            )
+        }
+        return 1
+    }
+
+    internal fun verify(context: CommandContext<CommandSourceStack>): Int {
+        val code = StringArgumentType.getString(context, "code")
+        val uuid = context.source.entityOrException.uuid.toKotlinUuid()
+
+        val result = KhatMod.async {
+            LinkServiceImpl.attemptVerification(uuid, code)
+        }.getCompleted()
+
+        if (result.success) {
+            context.source.sendSuccess(
+                { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
+                false
+            )
+        } else {
+            context.source.sendFailure(Component.literal(result.message))
+        }
+
+        return if (result.success) 1 else 0
+    }
+
+    internal fun forceLink(context: CommandContext<CommandSourceStack>): Int {
+        val uuid = UuidArgument.getUuid(context, "uuid").toKotlinUuid()
+        val id = StringArgumentType.getString(context, "id").toULong()
+
+        val result = KhatMod.async {
+            LinkServiceImpl.forceVerification(uuid, id)
+        }.getCompleted()
+
+        if (result.success) {
+            context.source.sendSuccess(
+                { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
+                false
+            )
+        } else {
+            context.source.sendFailure(Component.literal(result.message))
+        }
+
+        return if (result.success) 1 else 0
+    }
+
+    internal fun viewLink(context: CommandContext<CommandSourceStack>): Int {
+        val target = GameProfileArgument.getGameProfiles(context, "target").first()
+
+        val status = KhatMod.async {
+            LinkServiceImpl.getLinkStatus(target.id.toKotlinUuid())
+        }.getCompleted()
+
+        val source = context.source
+        if (status == null) {
+            source.sendSuccess(
+                {
+                    Component.literal("${target.id.toKotlinUuid().toHexDashString()} is currently not linked or being linked.")
+                },
+                false
+            )
+        } else {
+            val expirationTime = status.expires - Clock.System.now()
+            var timeString = "Time left: N/A"
+            if (!expirationTime.isNegative()) {
+                timeString = "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
+            }
+            source.sendSuccess(
+                {
+                    Component.literal("""
+                        Link status for ${target.id.toKotlinUuid().toHexDashString()}:
+                        Verified: ${status.verified}
+                        $timeString
+                        Linked to ${status.snowflake}
+                    """.trimIndent())
+                },
+                false
+            )
+        }
         return 1
     }
 }
