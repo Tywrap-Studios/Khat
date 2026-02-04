@@ -19,7 +19,7 @@ object CommandServiceImpl : CommandService {
                 server.commands
                     .performPrefixedCommand(source.createCommandSourceStack(), command)
             }
-            return source.getResponse().ifEmpty { "No or empty response" }
+            return source.getBuiltUpResponse().ifEmpty { "No or empty response" }
         }
         return "Server is not dedicated"
     }

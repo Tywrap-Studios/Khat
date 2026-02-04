@@ -16,7 +16,7 @@ class MRpcCommandSource(val server: MinecraftServer) : CommandSource {
         this.responseBuffer.setLength(0)
     }
 
-    fun getResponse(): String {
+    fun getBuiltUpResponse(): String {
         return this.responseBuffer.toString()
     }
 

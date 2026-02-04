@@ -59,7 +59,12 @@ dependencies {
     // mclo.gs API
     includeImplementation("gs.mclo:api:${property("deps.mclogs")}")
     // hookt
-    includeImplementation("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}")
+    implementation("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}") {
+        exclude("org.slf4j", "slf4j-simple")
+    }
+    include("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}") {
+        exclude("org.slf4j", "slf4j-simple")
+    }
     // Ktor
     includeImplementation("io.ktor:ktor-client-core")
     includeImplementation("io.ktor:ktor-client-cio")
@@ -79,7 +84,7 @@ dependencies {
     includeImplementation("org.jetbrains.exposed:exposed-java-time:${property("deps.exposed")}")
     includeImplementation("org.jetbrains.exposed:exposed-jdbc:${property("deps.exposed")}")
     includeImplementation("org.jetbrains.exposed:exposed-json:${property("deps.exposed")}")
-//    includeImplementation("org.xerial:sqlite-jdbc:${property("deps.sqlite-jdbc")}")
+    includeImplementation("org.xerial:sqlite-jdbc:${property("deps.sqlite-jdbc")}")
 
     /* Compat */
     // Spark

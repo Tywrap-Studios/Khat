@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.uchuhimo.konf.source.toml.toToml
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.toDateTimePeriod
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.ChatFormatting
@@ -14,6 +14,8 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.arguments.GameProfileArgument
 import net.minecraft.commands.arguments.UuidArgument
 import net.minecraft.network.chat.Component
+import org.tywrapstudios.kamera.api.LinkStatus
+import org.tywrapstudios.kamera.api.VerificationResult
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.compat.handleSparkWorldTimeOut
@@ -114,12 +116,13 @@ object CommandExecutions {
      *  LINK
      */
 
-    internal fun link(context: CommandContext<CommandSourceStack>): Int {
+    internal fun status(context: CommandContext<CommandSourceStack>): Int {
         val uuid = context.source.entityOrException.uuid.toKotlinUuid()
 
-        val status = KhatMod.async {
-            LinkServiceImpl.getLinkStatus(uuid)
-        }.getCompleted()
+        var status: LinkStatus? = null
+        runBlocking {
+            status = LinkServiceImpl.getLinkStatus(uuid)
+        }
 
         val source = context.source
         if (status == null) {
@@ -151,51 +154,63 @@ object CommandExecutions {
     }
 
     internal fun verify(context: CommandContext<CommandSourceStack>): Int {
-        val code = StringArgumentType.getString(context, "code")
-        val uuid = context.source.entityOrException.uuid.toKotlinUuid()
+        try {
+            val code = StringArgumentType.getString(context, "code")
+            val uuid = context.source.entityOrException.uuid.toKotlinUuid()
 
-        val result = KhatMod.async {
-            LinkServiceImpl.attemptVerification(uuid, code)
-        }.getCompleted()
+            var result: VerificationResult? = null
+            runBlocking {
+                result = LinkServiceImpl.attemptVerification(uuid, code)
+            }
 
-        if (result.success) {
-            context.source.sendSuccess(
-                { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
-                false
-            )
-        } else {
-            context.source.sendFailure(Component.literal(result.message))
+            KhatMod.LOGGER.info("Result: ${result == null} - $result")
+
+            if (result?.success == true) {
+                context.source.sendSuccess(
+                    { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
+                    false
+                )
+            } else {
+                context.source.sendFailure(Component.literal(result?.message ?: ""))
+            }
+
+            return if (result?.success == true) 1 else 0
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
-
-        return if (result.success) 1 else 0
+        return 0
     }
 
     internal fun forceLink(context: CommandContext<CommandSourceStack>): Int {
         val uuid = UuidArgument.getUuid(context, "uuid").toKotlinUuid()
         val id = StringArgumentType.getString(context, "id").toULong()
 
-        val result = KhatMod.async {
-            LinkServiceImpl.forceVerification(uuid, id)
-        }.getCompleted()
+        var result: VerificationResult? = null
+        runBlocking {
+            result = LinkServiceImpl.forceVerification(uuid, id)
+        }
 
-        if (result.success) {
+        if (result?.success == true) {
             context.source.sendSuccess(
                 { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
                 false
             )
         } else {
-            context.source.sendFailure(Component.literal(result.message))
+            context.source.sendFailure(Component.literal(result?.message))
         }
 
-        return if (result.success) 1 else 0
+        return if (result?.success == true) 1 else 0
     }
 
     internal fun viewLink(context: CommandContext<CommandSourceStack>): Int {
         val target = GameProfileArgument.getGameProfiles(context, "target").first()
 
-        val status = KhatMod.async {
-            LinkServiceImpl.getLinkStatus(target.id.toKotlinUuid())
-        }.getCompleted()
+        var status: LinkStatus? = null
+        runBlocking {
+            status = LinkServiceImpl.getLinkStatus(target.id.toKotlinUuid())
+        }
+
+        KhatMod.LOGGER.info("Status: ${status == null} - $status")
 
         val source = context.source
         if (status == null) {

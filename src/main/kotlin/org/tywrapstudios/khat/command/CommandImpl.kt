@@ -48,17 +48,27 @@ object CommandImpl {
 
         val link = Commands
             .literal("link")
-            .executes(CommandExecutions::link)
             .build()
 
-        val codeArg = Commands
-            .argument("code", StringArgumentType.greedyString())
+        val status = Commands
+            .literal("status")
+            .executes(CommandExecutions::status)
             .build()
 
         val verify = Commands
             .literal("verify")
-            .then(codeArg)
+            .build()
+
+        val codeArg = Commands
+            .argument("code", StringArgumentType.greedyString())
             .executes(CommandExecutions::verify)
+            .build()
+
+        val forceLink = Commands
+            .literal("force-link")
+            .requires { source ->
+                source.hasPermission(3)
+            }
             .build()
 
         val uuidArg = Commands
@@ -67,20 +77,7 @@ object CommandImpl {
 
         val idArg = Commands
             .argument("id", StringArgumentType.word())
-            .build()
-
-        val forceLink = Commands
-            .literal("force-link")
-            .requires { source ->
-                source.hasPermission(3)
-            }
-            .then(uuidArg)
-            .then(idArg)
             .executes(CommandExecutions::forceLink)
-            .build()
-
-        val targetArg = Commands
-            .argument("target", GameProfileArgument.gameProfile())
             .build()
 
         val viewLink = Commands
@@ -88,9 +85,15 @@ object CommandImpl {
             .requires { source ->
                 source.hasPermission(3)
             }
-            .then(targetArg)
+            .build()
+
+        val targetArg = Commands
+            .argument("target", GameProfileArgument.gameProfile())
             .executes(CommandExecutions::viewLink)
             .build()
+
+        /* Root */
+        dispatcher.root.addChild(root)
 
         /* Debug */
         root.addChild(debug)
@@ -102,11 +105,13 @@ object CommandImpl {
 
         /* Link */
         root.addChild(link)
+        link.addChild(status)
         link.addChild(verify)
+        verify.addChild(codeArg)
         link.addChild(forceLink)
+        forceLink.addChild(uuidArg)
+        forceLink.addChild(idArg)
         link.addChild(viewLink)
-
-        /* Root */
-        dispatcher.root.addChild(root)
+        viewLink.addChild(targetArg)
     }
 }

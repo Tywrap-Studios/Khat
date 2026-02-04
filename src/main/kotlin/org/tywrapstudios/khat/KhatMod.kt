@@ -103,7 +103,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 		val console = McPlayer("Console", "console")
 		ServerLifecycleEvents.SERVER_STARTED.register {
             SERVER = it
-//            DatabaseManager.setup()
+            DatabaseManager.setup()
 			HandleMinecraft.handleChatMessage("Server started.", console)
 		}
 

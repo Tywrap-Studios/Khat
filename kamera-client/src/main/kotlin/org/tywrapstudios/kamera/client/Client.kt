@@ -15,8 +15,12 @@ import kotlinx.rpc.krpc.serialization.json.json
 import kotlinx.rpc.withService
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
+import org.tywrapstudios.kamera.api.LinkService
 import java.util.Scanner
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun main() = runBlocking {
     val scanner = Scanner(System.`in`)
     while (isActive) {
@@ -27,12 +31,26 @@ fun main() = runBlocking {
             while (isActive) {
                 try {
                     val nextLine = scanner.nextLine()
-                    if (nextLine.startsWith(">>ch")) {
+                    if (nextLine.startsWith(">>ch ")) {
                         client.withService<ChatService>()
                             .sendMessage("Test", nextLine.replace(">>ch ", ""))
+                    } else if (nextLine.startsWith(">>link ")) {
+                        println(nextLine.replace(">>link ", ""))
+                        println(nextLine.replace(">>link ", "").split(":"))
+                        println(nextLine.replace(">>link ", "").split(":").first())
+                        val link = client.withService<LinkService>()
+                            .generateCode(Uuid.parseHex(nextLine.replace(">>link ", "").split(":").first()), nextLine.replace(">>link ", "").split(":").last().toULong())
+                        println("${link?.code}, ${link?.expires}")
+                    } else if (nextLine.startsWith(">>checklink ")) {
+                        val response = client.withService<LinkService>()
+                            .getLinkStatus(Uuid.parseHex(nextLine.replace(">>checklink ", "")))
+                        println("${response?.uuid?.toHexDashString()} : ${response?.snowflake}, ${response?.expires}, ${response?.verified}")
+                    } else if (nextLine.startsWith(">>unlink ")) {
+                        client.withService<LinkService>()
+                            .unlink(Uuid.parseHex(nextLine.replace(">>unlink ", "")))
                     } else {
                         println(client.withService<CommandService>()
-                            .run(scanner.nextLine()))
+                            .run(nextLine))
                     }
                 } catch (e: IllegalStateException) {
                     println("Error: $e")
@@ -41,6 +59,7 @@ fun main() = runBlocking {
                     }
                 } catch (e: Throwable) {
                     println("Error: $e")
+                    e.printStackTrace()
                 }
             }
 

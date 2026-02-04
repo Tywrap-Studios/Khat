@@ -34,10 +34,9 @@ object LinkServiceImpl : LinkService {
             val query = LinkTable.selectAll().where { LinkTable.uuid eq uuid }
 
             if (!query.empty()) {
-                return@transaction
-            }
-            if (query.first().let { it[LinkTable.verified] }) {
-                return@transaction
+                if (query.first().let { it[LinkTable.verified] }) {
+                    return@transaction
+                }
             }
 
             LinkTable.replace {
@@ -94,7 +93,7 @@ object LinkServiceImpl : LinkService {
         uuid: Uuid,
         code: String
     ): VerificationResult {
-        var result = VerificationResult(false, "")
+        var result = VerificationResult(false, "No result given")
         transaction {
             SchemaUtils.create(LinkTable)
 
