@@ -171,7 +171,7 @@ object CommandExecutions {
                     false
                 )
             } else {
-                context.source.sendFailure(Component.literal(result?.message ?: ""))
+                context.source.sendFailure(Component.literal(result?.message ?: "null"))
             }
 
             return if (result?.success == true) 1 else 0
@@ -196,7 +196,7 @@ object CommandExecutions {
                 false
             )
         } else {
-            context.source.sendFailure(Component.literal(result?.message))
+            context.source.sendFailure(Component.literal(result?.message ?: "null"))
         }
 
         return if (result?.success == true) 1 else 0
