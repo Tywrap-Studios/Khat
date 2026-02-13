@@ -7,7 +7,7 @@ plugins {
 group = "org.tywrapstudios"
 version = "0.1.0"
 
-val requiredJava = JavaVersion.VERSION_21
+val requiredJava = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
