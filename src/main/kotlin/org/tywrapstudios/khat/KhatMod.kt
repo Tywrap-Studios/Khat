@@ -126,6 +126,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                     globalConfig[BotSpec.token],
                     globalConfig[RpcSpec.token],
                     globalConfig[RpcSpec.port],
+                    globalConfig[BotSpec.channel].toULong(),
                     globalConfig[BotSpec.moderators].map { it.toULong() }.toSet()
                 )
             )

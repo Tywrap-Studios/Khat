@@ -3,6 +3,7 @@ package org.tywrapstudios.krapher
 import dev.kordex.core.ExtensibleBot
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.tywrapstudios.krapher.extensions.minecraft.ChatExtension
 import org.tywrapstudios.krapher.extensions.minecraft.CommandExtension
 
 val logger: Logger = LoggerFactory.getLogger("Krapher")
@@ -22,6 +23,7 @@ object BotInitializer {
 
         extensions {
             add(::CommandExtension)
+            add(::ChatExtension)
         }
 
         intents(false) {
@@ -40,5 +42,6 @@ data class BotConfig(
     val token: String,
     val mRpcToken: String,
     val mRpcPort: Int,
+    val chat: ULong,
     val moderators: Set<ULong>
 )
