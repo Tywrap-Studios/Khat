@@ -43,6 +43,7 @@ import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import org.tywrapstudios.krapher.BotConfig
 import org.tywrapstudios.krapher.BotInitializer
+import org.tywrapstudios.krapher.FeatureSet
 import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
@@ -127,7 +128,12 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                     globalConfig[RpcSpec.token],
                     globalConfig[RpcSpec.port],
                     globalConfig[BotSpec.channel].toULong(),
-                    globalConfig[BotSpec.moderators].map { it.toULong() }.toSet()
+                    globalConfig[BotSpec.moderators].map { it.toULong() }.toSet(),
+                    FeatureSet(
+                        globalConfig[RpcSpec.FeatureSpec.chat],
+                        globalConfig[RpcSpec.FeatureSpec.linking],
+                        globalConfig[RpcSpec.FeatureSpec.commands],
+                    ),
                 )
             )
         }

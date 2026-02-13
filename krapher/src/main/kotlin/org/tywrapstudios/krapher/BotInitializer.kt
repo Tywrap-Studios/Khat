@@ -5,6 +5,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.krapher.extensions.minecraft.ChatExtension
 import org.tywrapstudios.krapher.extensions.minecraft.CommandExtension
+import org.tywrapstudios.krapher.extensions.minecraft.LinkingExtension
 
 val logger: Logger = LoggerFactory.getLogger("Krapher")
 
@@ -22,8 +23,9 @@ object BotInitializer {
         }
 
         extensions {
-            add(::CommandExtension)
-            add(::ChatExtension)
+            if (config.featureSet.commands) add(::CommandExtension)
+            if (config.featureSet.chat) add(::ChatExtension)
+            if (config.featureSet.linking) add(::LinkingExtension)
         }
 
         intents(false) {
@@ -43,5 +45,12 @@ data class BotConfig(
     val mRpcToken: String,
     val mRpcPort: Int,
     val chat: ULong,
-    val moderators: Set<ULong>
+    val moderators: Set<ULong>,
+    val featureSet: FeatureSet,
+)
+
+data class FeatureSet(
+    val chat: Boolean,
+    val linking: Boolean,
+    val commands: Boolean,
 )

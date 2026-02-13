@@ -14,7 +14,7 @@ import kotlin.uuid.Uuid
 /**
  * Represents a Minecraft player with their ID, name, legacy status, and properties.
  * From the Mojang API at https://sessionserver.mojang.com/session/minecraft/profile/UUID.
- * @property id Player's [UUID].
+ * @property id Player's [Uuid].
  * @property name Player name, case-sensitive.
  * @property legacy Included in response if the account has not migrated to Mojang account.
  * @property properties A list of [McPlayerProperties]. Is expected to contain only one entry.

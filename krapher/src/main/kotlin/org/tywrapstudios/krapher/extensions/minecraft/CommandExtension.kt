@@ -29,9 +29,7 @@ class CommandExtension : Extension() {
                 description = Translations.Commands.Cmd.List.description
 
                 action {
-                    logger.info("Running /list.")
                     run("/list")
-                    logger.info("Done.")
                 }
             }
 
@@ -43,9 +41,7 @@ class CommandExtension : Extension() {
 
                 action {
                     val command = arguments.command
-                    logger.info("Running $command.")
                     run(command)
-                    logger.info("Done.")
                 }
             }
         }
