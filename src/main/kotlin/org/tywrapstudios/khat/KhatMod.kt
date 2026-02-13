@@ -26,9 +26,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
+import org.tywrapstudios.kamera.api.HealthService
 import org.tywrapstudios.kamera.api.LinkService
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.command.CommandImpl
+import org.tywrapstudios.khat.config.BotSpec
 import org.tywrapstudios.khat.config.RpcSpec
 import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.config.initializeConfigs
@@ -36,8 +38,11 @@ import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.database.DatabaseManager
 import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
+import org.tywrapstudios.khat.platform.kamera.HealthServiceImpl
 import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
+import org.tywrapstudios.krapher.BotConfig
+import org.tywrapstudios.krapher.BotInitializer
 import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
@@ -49,6 +54,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 	val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
     lateinit var SERVER: MinecraftServer
     var RPC_JOB: Job? = null
+    var BOT_JOB: Job? = null
 
     override val coroutineContext: CoroutineContext = Dispatchers.Default + CoroutineName("Khat")
 
@@ -59,47 +65,74 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 		registerEvents()
 
         if (globalConfig[RpcSpec.enabled]) {
-            RPC_JOB = KhatMod.launch {
-                embeddedServer(Netty, port = globalConfig[RpcSpec.port]) {
-                    install(Authentication) {
-                        bearer("rpc-auth") {
-                            if (globalConfig[RpcSpec.token].isEmpty()) {
-                                throw IllegalStateException("No token provided for RPC server.")
-                            }
-                            authenticate { credentials ->
-                                if (credentials.token == globalConfig[RpcSpec.token]) {
-                                    UserIdPrincipal("rpc-client")
-                                    LOGGER.info("RPC Client authenticated")
-                                } else {
-                                    null
-                                }
+            startRpc()
+        }
+        if (globalConfig[BotSpec.enabled]) {
+            startBot()
+        }
+    }
+
+    private fun startRpc() {
+        RPC_JOB = KhatMod.launch {
+            embeddedServer(Netty, port = globalConfig[RpcSpec.port]) {
+                install(Authentication) {
+                    bearer("rpc-auth") {
+                        if (globalConfig[RpcSpec.token].isEmpty()) {
+                            throw IllegalStateException("No token provided for RPC server.")
+                        }
+                        authenticate { credentials ->
+                            if (credentials.token == globalConfig[RpcSpec.token]) {
+                                UserIdPrincipal("rpc-client")
+                                LOGGER.info("RPC Client authenticated")
+                            } else {
+                                null
                             }
                         }
                     }
-                    install(Krpc)
+                }
+                install(Krpc)
 
-                    routing {
-                        authenticate("rpc-auth"){
-                            rpc("/kamera") {
-                                rpcConfig {
-                                    serialization {
-                                        json()
-                                    }
+                routing {
+                    authenticate("rpc-auth") {
+                        rpc("/kamera") {
+                            rpcConfig {
+                                serialization {
+                                    json()
                                 }
+                            }
 
+                            registerService<HealthService> { HealthServiceImpl }
+                            if (globalConfig[RpcSpec.FeatureSpec.linking]) {
                                 registerService<LinkService> { LinkServiceImpl }
+                            }
+                            if (globalConfig[RpcSpec.FeatureSpec.commands]) {
                                 registerService<CommandService> { CommandServiceImpl }
+                            }
+                            if (globalConfig[RpcSpec.FeatureSpec.chat]) {
                                 registerService<ChatService> { ChatServiceImpl }
                             }
                         }
                     }
-                    LOGGER.info("Started RPC server")
-                }.start(wait = true)
-            }
+                }
+                LOGGER.info("Started RPC server")
+            }.start(wait = true)
         }
     }
 
-	internal fun registerEvents() {
+    private fun startBot() {
+        BOT_JOB = KhatMod.launch {
+            BotInitializer.start(
+                BotConfig(
+                    globalConfig[BotSpec.token],
+                    globalConfig[RpcSpec.token],
+                    globalConfig[RpcSpec.port],
+                    globalConfig[BotSpec.moderators].map { it.toULong() }.toSet()
+                )
+            )
+        }
+    }
+
+    private fun registerEvents() {
 		val console = McPlayer("Console", "console")
 		ServerLifecycleEvents.SERVER_STARTED.register {
             SERVER = it

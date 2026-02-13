@@ -30,6 +30,10 @@ repositories {
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
     maven("https://jitpack.io") { name = "JitPack" }
+    maven("https://snapshots-repo.kordex.dev") { name = "KordEx (Snapshots, R2)" }
+    maven("https://releases-repo.kordex.dev") { name = "KordEx (Releases, R2)" }
+    maven("https://repo.kordex.dev/snapshots") { name = "KordEx (Snapshots + Mirror, Reposilite)" }
+    maven("https://mirror-repo.kordex.dev") { name = "KordEx (Mirror, R2)" }
 }
 
 dependencies {
@@ -77,6 +81,8 @@ dependencies {
     includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:${property("deps.krpc")}")
     // kamera
     includeImplementation(project(":kamera"))
+    // krapher
+    includeImplementation(project(":krapher"))
     // Exposed
     includeImplementation("org.jetbrains.exposed:exposed-core:${property("deps.exposed")}")
     includeImplementation("org.jetbrains.exposed:exposed-dao:${property("deps.exposed")}")

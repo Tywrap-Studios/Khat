@@ -1,7 +1,8 @@
 [khat]
 # This is an internal value used to determine whether your config is valid
-# for the current instance of the bot. Automatic migrations might be made in order
-# to keep you updated, so do NOT manually change this!
+# for the current instance of the mod. Automatic migrations might be made in order
+# to keep you updated, so do NOT manually change this unless you know what you're
+# doing! Otherwise, your values may be lost.
 version = "3.0"
 # A list with strings with webhook endpoint URLs
 # See: https://tywrap-studios.tiazzz.me/r/webhooks
@@ -13,11 +14,37 @@ webhooks = []
 # send commands, messages or linking logic over to the server.
 enabled = false
 # This is the port that the embedded RPC server runs on.
+# When running a local bot, this does not need to be
+# exposed.
 port = 34230
 # This is the token (password) to access the RPC server.
+# Keeping it safe is a good idea, it has similar command
+# access like RCON.
 token = ""
 
 [rpc.feature]
+# Whether to enable applications to send chat messages to the server.
+chat = true
+# Whether to enable applications to send commands to the server at
+# operator level 4. (Similar to RCON)
+commands = false
 # Whether to enable the possibility to link UUIDs (Minecraft account IDs)
 # to Discord IDs. This can be used for whitelisting.
 linking = false
+
+[bot]
+# Whether to run a simple, integrated KordEx bot as a connection
+# to the kRPC server.
+# Available features are snooped from the RPC config, as you need
+# RPC features enabled in order for this to work.
+enabled = false
+# The token of the bot, from the developer dashboard.
+# See: https://tywrap-studios.tiazzz.me/r/bot-tokens
+token = ""
+# The ID of the channel to watch for messages to send.
+channel = ""
+# The IDs of the roles that have moderator permissions.
+# (E.g., your Minecraft operators)
+moderators = [
+    "1248646236475625535"
+]

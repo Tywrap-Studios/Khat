@@ -5,6 +5,8 @@ pluginManagement {
         gradlePluginPortal()
         maven("https://maven.fabricmc.net/")
         maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
+        maven("https://snapshots-repo.kordex.dev")
+        maven("https://releases-repo.kordex.dev")
     }
 }
 
@@ -23,3 +25,4 @@ stonecutter {
 rootProject.name = "Khat"
 include("kamera")
 include("kamera-client")
+include("krapher")

@@ -47,6 +47,7 @@ fun initializeConfigs() {
     globalConfig = Config {
         addSpec(KhatSpec)
         addSpec(RpcSpec)
+        addSpec(BotSpec)
     }
         .from.toml.resource("default-configs/global.toml")
         .from.toml.watchFile(FabricLoader.getInstance().configDir.resolve(GLOBAL_PATH).toFile())
