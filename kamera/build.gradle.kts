@@ -7,6 +7,8 @@ plugins {
 group = "org.tywrapstudios"
 version = "0.1.0"
 
+val requiredJava = JavaVersion.VERSION_21
+
 repositories {
     mavenCentral()
 }
@@ -18,13 +20,13 @@ dependencies {
 
 java {
     withSourcesJar()
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = requiredJava
+    sourceCompatibility = requiredJava
 }
 
 kotlin {
-    jvmToolchain(JavaVersion.VERSION_21.majorVersion.toInt())
+    jvmToolchain(requiredJava.majorVersion.toInt())
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(JavaVersion.VERSION_21.majorVersion))
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(requiredJava.majorVersion))
     }
 }

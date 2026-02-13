@@ -163,8 +163,6 @@ object CommandExecutions {
                 result = LinkServiceImpl.attemptVerification(uuid, code)
             }
 
-            KhatMod.LOGGER.info("Result: ${result == null} - $result")
-
             if (result?.success == true) {
                 context.source.sendSuccess(
                     { Component.literal(result.message).withStyle(ChatFormatting.DARK_GREEN) },
@@ -209,8 +207,6 @@ object CommandExecutions {
         runBlocking {
             status = LinkServiceImpl.getLinkStatus(target.id.toKotlinUuid())
         }
-
-        KhatMod.LOGGER.info("Status: ${status == null} - $status")
 
         val source = context.source
         if (status == null) {

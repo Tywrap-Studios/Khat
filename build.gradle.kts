@@ -2,7 +2,6 @@ plugins {
     id("net.fabricmc.fabric-loom-remap")
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
-    id("io.ktor.plugin") version "3.3.2"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
 
     // `maven-publish`
@@ -66,12 +65,12 @@ dependencies {
         exclude("org.slf4j", "slf4j-simple")
     }
     // Ktor
-    includeImplementation("io.ktor:ktor-client-core")
-    includeImplementation("io.ktor:ktor-client-cio")
-    includeImplementation("io.ktor:ktor-client-content-negotiation")
-    includeImplementation("io.ktor:ktor-serialization-kotlinx-json")
-    includeImplementation("io.ktor:ktor-server-netty-jvm")
-    includeImplementation("io.ktor:ktor-server-auth")
+    includeImplementation("io.ktor:ktor-client-core:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-cio:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-client-content-negotiation:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-server-netty-jvm:${property("deps.ktor")}")
+    includeImplementation("io.ktor:ktor-server-auth:${property("deps.ktor")}")
     // kRPC
     includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:${property("deps.krpc")}")
     includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:${property("deps.krpc")}")

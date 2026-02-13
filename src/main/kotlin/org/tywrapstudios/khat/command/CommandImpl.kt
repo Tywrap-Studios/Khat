@@ -6,6 +6,8 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraft.commands.arguments.GameProfileArgument
 import net.minecraft.commands.arguments.UuidArgument
+//? if 1.21.11
+//import net.minecraft.server.permissions.Permissions
 
 object CommandImpl {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
@@ -17,7 +19,11 @@ object CommandImpl {
         val debug = Commands
             .literal("debug")
             .requires { source ->
+                //? if 1.21.11 {
+                /*source.permissions().hasPermission(Permissions.COMMANDS_ADMIN)
+                *///?} else {
                 source.hasPermission(3)
+                //?}
             }
             .build()
 
@@ -67,7 +73,11 @@ object CommandImpl {
         val forceLink = Commands
             .literal("force-link")
             .requires { source ->
+                //? if 1.21.11 {
+                /*source.permissions().hasPermission(Permissions.COMMANDS_ADMIN)
+                *///?} else {
                 source.hasPermission(3)
+                //?}
             }
             .build()
 
@@ -83,7 +93,11 @@ object CommandImpl {
         val viewLink = Commands
             .literal("view-link")
             .requires { source ->
+                //? if 1.21.11 {
+                /*source.permissions().hasPermission(Permissions.COMMANDS_ADMIN)
+                *///?} else {
                 source.hasPermission(3)
+                //?}
             }
             .build()
 

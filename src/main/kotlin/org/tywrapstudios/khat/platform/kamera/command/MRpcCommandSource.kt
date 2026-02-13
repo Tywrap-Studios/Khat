@@ -5,6 +5,8 @@ import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerLevel
+//? if 1.21.11
+//import net.minecraft.server.permissions.LevelBasedPermissionSet
 import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 
@@ -24,10 +26,18 @@ class MRpcCommandSource(val server: MinecraftServer) : CommandSource {
         val serverLevel: ServerLevel = server.overworld()
         return CommandSourceStack(
             this,
+            //? if 1.21.11 {
+            /*Vec3.atLowerCornerOf(serverLevel.getRespawnData().pos()),
+            *///?} else {
             Vec3.atLowerCornerOf(serverLevel.sharedSpawnPos),
+            //?}
             Vec2.ZERO,
             serverLevel,
+            //? if 1.21.11 {
+            /*LevelBasedPermissionSet.OWNER,
+            *///?} else {
             4,
+            //?}
             "mRpc",
             component,
             this.server,
