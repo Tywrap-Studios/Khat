@@ -17,14 +17,21 @@ class ChatExtension : Extension() {
 
     override suspend fun setup() {
         event<MessageCreateEvent> {
-            check { inChannel(Snowflake(BotInitializer.config.chat)) }
-            check { isNotBot() }
+            check {
+                inChannel(Snowflake(BotInitializer.config.chat))
+                isNotBot()
+                passIf(event.message.author?.isBot == false && event.message.author?.isBot != null)
+            }
 
             action {
-                val player = if (event.member != null) getPlayer(event.member!!) else null
-                val name = player?.getName() ?: "Discord Member"
+                val member = event.member ?: return@action
+                if (member.isBot) {
+                    return@action
+                }
+                val player = getPlayer(member)
+                val name = player.getName()
                 KameraClient.get().withService<ChatService>()
-                    .sendMessage(name, event.message.content)
+                    .sendMessage(name, member.username, member.id.value, event.message.content)
             }
         }
     }

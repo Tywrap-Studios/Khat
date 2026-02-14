@@ -60,9 +60,9 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
 
         if (globalConfig[RpcSpec.enabled]) {
             startRpc()
-        }
-        if (globalConfig[BotSpec.enabled]) {
-            startBot()
+            if (globalConfig[BotSpec.enabled]) {
+                startBot()
+            }
         }
     }
 

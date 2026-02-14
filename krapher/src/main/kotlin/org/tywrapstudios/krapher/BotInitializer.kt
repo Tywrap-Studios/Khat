@@ -39,9 +39,9 @@ object BotInitializer {
     }
 
     suspend fun start(config: BotConfig) {
-        bot = setup(config.token)
         scheduler = Scheduler()
         this.config = config
+        bot = setup(config.token)
         bot.start()
     }
 }

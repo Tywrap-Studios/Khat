@@ -7,5 +7,5 @@ import kotlin.uuid.ExperimentalUuidApi
 
 @Rpc
 interface ChatService {
-    suspend fun sendMessage(name: String, message: String)
+    suspend fun sendMessage(name: String, username: String, id: ULong, message: String)
 }
