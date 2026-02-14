@@ -11,7 +11,7 @@ import kotlinx.rpc.krpc.ktor.client.rpc
 import kotlinx.rpc.krpc.ktor.client.rpcConfig
 import kotlinx.rpc.krpc.serialization.json.json
 import kotlinx.rpc.withService
-import org.tywrapstudios.kamera.api.HealthService
+import org.tywrapstudios.kamera.api.ServerStatsService
 
 object KameraClient {
     private lateinit var ktorClient: HttpClient
@@ -51,12 +51,15 @@ object KameraClient {
 
     suspend fun getClient(): KtorRpcClient {
         try {
-            logger.info("Checking health of client.")
-            rpcClient.withService<HealthService>().isOnline()
+            logger.debug("Checking health of client.")
+            val online = rpcClient.withService<ServerStatsService>().isOnline()
+            val players = rpcClient.withService<ServerStatsService>().playerCount()
+            val max = rpcClient.withService<ServerStatsService>().maximumPlayers()
+            logger.debug("Client is operable. Server returned status: ${if (online) "n" else "f"}${players}x${max}.")
             return rpcClient
         } catch (e: IllegalStateException) {
             if (e.message?.contains("cancelled") == true) {
-                logger.info("Client was cancelled, reconnecting...")
+                logger.warn("Client was cancelled, reconnecting...")
                 return reconnect()
             }
         } catch (e: Throwable) {

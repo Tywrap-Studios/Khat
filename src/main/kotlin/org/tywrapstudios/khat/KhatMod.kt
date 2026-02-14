@@ -26,7 +26,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
-import org.tywrapstudios.kamera.api.HealthService
+import org.tywrapstudios.kamera.api.ServerStatsService
 import org.tywrapstudios.kamera.api.LinkService
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.command.CommandImpl
@@ -38,7 +38,7 @@ import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.database.DatabaseManager
 import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
-import org.tywrapstudios.khat.platform.kamera.HealthServiceImpl
+import org.tywrapstudios.khat.platform.kamera.ServerStatsServiceImpl
 import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import org.tywrapstudios.krapher.BotConfig
@@ -102,7 +102,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                                 }
                             }
 
-                            registerService<HealthService> { HealthServiceImpl }
+                            registerService<ServerStatsService> { ServerStatsServiceImpl }
                             if (globalConfig[RpcSpec.FeatureSpec.linking]) {
                                 registerService<LinkService> { LinkServiceImpl }
                             }
