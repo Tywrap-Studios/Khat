@@ -57,10 +57,10 @@ class LinkingExtension : Extension() {
                             embed {
                                 title = Translations.Responses.Link.Embed.title.translate()
                                 description = Translations.Responses.Link.New.Embed.description.withOrdinalPlaceholders(
-                                        code.code,
-                                        "/khat link verify ${code.code}",
-                                        code.expires.toDiscord(TimestampType.ShortDateTime)
-                                    ).translate()
+                                    code.code,
+                                    "/khat link verify ${code.code}",
+                                    code.expires.toDiscord(TimestampType.ShortDateTime)
+                                ).translate()
                                 color = DISCORD_BLURPLE
                             }
                         }

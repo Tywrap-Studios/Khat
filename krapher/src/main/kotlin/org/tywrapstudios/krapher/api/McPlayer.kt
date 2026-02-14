@@ -21,11 +21,11 @@ import kotlin.uuid.Uuid
  */
 @Serializable
 data class McPlayer(
-	val id: String,
-	val name: String,
-	val legacy: Boolean? = false,
-	val properties: List<McPlayerProperties>,
-	val profileActions: List<String>
+    val id: String,
+    val name: String,
+    val legacy: Boolean? = false,
+    val properties: List<McPlayerProperties>,
+    val profileActions: List<String>
 )
 
 /**
@@ -40,9 +40,9 @@ data class McPlayer(
  */
 @Serializable
 data class McPlayerProperties(
-	val name: String,
-	val signature: String? = null,
-	val value: String,
+    val name: String,
+    val signature: String? = null,
+    val value: String,
 )
 
 /**
@@ -58,11 +58,11 @@ data class McPlayerProperties(
  */
 @Serializable
 data class PropertiesValue(
-	val timestamp: Int,
-	val profileId: String,
-	val profileName: String,
-	val signatureRequired: Boolean? = false,
-	val textures: Map<String, TextureObject>
+    val timestamp: Int,
+    val profileId: String,
+    val profileName: String,
+    val signatureRequired: Boolean? = false,
+    val textures: Map<String, TextureObject>
 )
 
 /**
@@ -89,16 +89,16 @@ data class TextureObjectMetadata(val model: String)
  * @return [McPlayer] object or null if an error occurs.
  */
 fun getMcPlayer(uuid: Uuid): McPlayer? {
-	return try {
-		logger.debug("Fetching Minecraft player profile for UUID: {}", uuid.toHexDashString())
-		val url: URL =
-			URI.create("https://sessionserver.mojang.com/session/minecraft/profile/$uuid").toURL()
-		val response = url.readText()
-		logger.debug("Response: $response")
-		Json.decodeFromString<McPlayer>(response)
-	} catch (e: Exception) {
-		logger.warn("Something went wrong while fetching Minecraft profile for UUID: ${uuid.toHexDashString()}")
-		e.printStackTrace()
-		null
-	}
+    return try {
+        logger.debug("Fetching Minecraft player profile for UUID: {}", uuid.toHexDashString())
+        val url: URL =
+            URI.create("https://sessionserver.mojang.com/session/minecraft/profile/$uuid").toURL()
+        val response = url.readText()
+        logger.debug("Response: $response")
+        Json.decodeFromString<McPlayer>(response)
+    } catch (e: Exception) {
+        logger.warn("Something went wrong while fetching Minecraft profile for UUID: ${uuid.toHexDashString()}")
+        e.printStackTrace()
+        null
+    }
 }

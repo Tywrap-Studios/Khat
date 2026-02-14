@@ -10,9 +10,9 @@ import dev.kordex.core.extensions.Extension
 import dev.kordex.core.extensions.publicSlashCommand
 import dev.kordex.core.types.InteractionContext
 import kotlinx.rpc.withService
-import org.tywrapstudios.krapher.checks.isModerator
 import org.tywrapstudios.kamera.api.CommandService
 import org.tywrapstudios.krapher.KameraClient
+import org.tywrapstudios.krapher.checks.isModerator
 import org.tywrapstudios.krapher.i18n.Translations
 
 class CommandExtension : Extension() {
@@ -53,7 +53,7 @@ class CommandExtension : Extension() {
         }
     }
 
-    suspend fun InteractionContext<*,*,*,*>.run(command: String) {
+    suspend fun InteractionContext<*, *, *, *>.run(command: String) {
         respond {
             val response = try {
                 KameraClient.get().withService<CommandService>()

@@ -3,12 +3,8 @@
 package org.tywrapstudios.khat.platform.kamera
 
 import org.jetbrains.exposed.v1.core.eq
-import org.jetbrains.exposed.v1.jdbc.SchemaUtils
-import org.jetbrains.exposed.v1.jdbc.deleteWhere
-import org.jetbrains.exposed.v1.jdbc.replace
-import org.jetbrains.exposed.v1.jdbc.selectAll
+import org.jetbrains.exposed.v1.jdbc.*
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
-import org.jetbrains.exposed.v1.jdbc.update
 import org.tywrapstudios.kamera.api.LinkCode
 import org.tywrapstudios.kamera.api.LinkService
 import org.tywrapstudios.kamera.api.LinkStatus

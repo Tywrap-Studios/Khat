@@ -3,7 +3,6 @@
 package org.tywrapstudios.krapher.extensions.minecraft
 
 import dev.kord.common.entity.ButtonStyle
-import dev.kord.core.behavior.edit
 import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.builder.components.emoji
 import dev.kord.core.entity.ReactionEmoji
@@ -49,7 +48,7 @@ class LookupExtension : Extension() {
                         e.printStackTrace()
                         null
                     }
-                    val player = if (mcLink != null ) getMcPlayer(mcLink.uuid) else null
+                    val player = if (mcLink != null) getMcPlayer(mcLink.uuid) else null
                     if (mcLink != null && player != null) {
                         respond {
                             embed {
@@ -218,7 +217,10 @@ class LookupExtension : Extension() {
         }
         if (mcLink != null) {
             actionRow {
-                interactionButton(ButtonStyle.Primary, "minecraft:force-link:${mcLink.uuid.toHexString()}:${mcLink.snowflake}") {
+                interactionButton(
+                    ButtonStyle.Primary,
+                    "minecraft:force-link:${mcLink.uuid.toHexString()}:${mcLink.snowflake}"
+                ) {
                     label = "Force link"
                     emoji(ReactionEmoji.Unicode("🔗"))
                     disabled = mcLink.verified

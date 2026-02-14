@@ -1,19 +1,12 @@
 package org.tywrapstudios.khat
 
 import gs.mclo.api.MclogsClient
-import io.ktor.server.application.install
-import io.ktor.server.auth.Authentication
-import io.ktor.server.auth.UserIdPrincipal
-import io.ktor.server.auth.authenticate
-import io.ktor.server.auth.bearer
-import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.routing.routing
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import io.ktor.server.routing.*
+import kotlinx.coroutines.*
 import kotlinx.rpc.krpc.ktor.server.Krpc
 import kotlinx.rpc.krpc.ktor.server.rpc
 import kotlinx.rpc.krpc.serialization.json.json
@@ -26,8 +19,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
-import org.tywrapstudios.kamera.api.ServerStatsService
 import org.tywrapstudios.kamera.api.LinkService
+import org.tywrapstudios.kamera.api.ServerStatsService
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.command.CommandImpl
 import org.tywrapstudios.khat.config.BotSpec
@@ -38,21 +31,21 @@ import org.tywrapstudios.khat.config.migration.v2.MigrateV2
 import org.tywrapstudios.khat.database.DatabaseManager
 import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.ChatServiceImpl
+import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import org.tywrapstudios.khat.platform.kamera.ServerStatsServiceImpl
 import org.tywrapstudios.khat.platform.kamera.command.CommandServiceImpl
-import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import org.tywrapstudios.krapher.BotConfig
 import org.tywrapstudios.krapher.BotInitializer
 import org.tywrapstudios.krapher.FeatureSet
 import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
-	val LOGGER: Logger = LoggerFactory.getLogger("Khat")
-	const val VERSION: String =  /*$ mod_version*/"2.0.0"
-	const val MINECRAFT: String =  /*$ minecraft*/"1.21.1"
+    val LOGGER: Logger = LoggerFactory.getLogger("Khat")
+    const val VERSION: String =  /*$ mod_version*/"2.0.0"
+    const val MINECRAFT: String =  /*$ minecraft*/"1.21.1"
     const val MOD_ID: String = /*$ mod_id*/"ctd"
 
-	val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
+    val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)
     lateinit var SERVER: MinecraftServer
     var RPC_JOB: Job? = null
     var BOT_JOB: Job? = null
@@ -63,7 +56,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
         initializeConfigs()
         MigrateV2.attemptMigrate()
 
-		registerEvents()
+        registerEvents()
 
         if (globalConfig[RpcSpec.enabled]) {
             startRpc()
@@ -140,18 +133,18 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     }
 
     private fun registerEvents() {
-		val console = McPlayer("Console", "console")
-		ServerLifecycleEvents.SERVER_STARTED.register {
+        val console = McPlayer("Console", "console")
+        ServerLifecycleEvents.SERVER_STARTED.register {
             SERVER = it
             DatabaseManager.setup()
-			HandleMinecraft.handleChatMessage("Server started.", console)
-		}
+            HandleMinecraft.handleChatMessage("Server started.", console)
+        }
 
-		ServerLifecycleEvents.SERVER_STOPPED.register {
-			HandleMinecraft.handleChatMessage("Server stopped.", console)
-		}
+        ServerLifecycleEvents.SERVER_STOPPED.register {
+            HandleMinecraft.handleChatMessage("Server stopped.", console)
+        }
 
-		ServerMessageEvents.CHAT_MESSAGE.register { signedMessage, serverPlayerEntity, _ ->
+        ServerMessageEvents.CHAT_MESSAGE.register { signedMessage, serverPlayerEntity, _ ->
             val message: String = signedMessage.decoratedContent().string
             val authorUuid: String = signedMessage.sender().toString()
             val authorName: String = serverPlayerEntity.name.string
@@ -169,8 +162,8 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
             HandleMinecraft.handleChatMessage(message, McPlayer(authorName, authorUuid))
         }
 
-		CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
-			CommandImpl.register(dispatcher)
-		}
-	}
+        CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
+            CommandImpl.register(dispatcher)
+        }
+    }
 }

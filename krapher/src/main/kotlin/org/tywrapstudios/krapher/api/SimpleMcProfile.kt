@@ -15,8 +15,8 @@ import kotlin.uuid.Uuid
  */
 @Serializable
 data class SimpleMcProfile(
-	val id: String,
-	val name: String,
+    val id: String,
+    val name: String,
 )
 
 /**
@@ -27,16 +27,16 @@ data class SimpleMcProfile(
  */
 @OptIn(ExperimentalUuidApi::class)
 fun getMcPlayer(name: String): McPlayer? {
-	return try {
-		val uuidUrl: URL =
-			URI.create("https://api.mojang.com/users/profiles/minecraft/$name").toURL()
-		val uuidResponse = uuidUrl.readText()
-		val simpleProfile = Json.decodeFromString<SimpleMcProfile>(uuidResponse)
-		val uuid = simpleProfile.id
-		getMcPlayer(Uuid.parse(uuid))
-	} catch (e: Exception) {
-		logger.warn("Something went wrong while fetching Minecraft profile for username: $name")
-		e.printStackTrace()
-		null
-	}
+    return try {
+        val uuidUrl: URL =
+            URI.create("https://api.mojang.com/users/profiles/minecraft/$name").toURL()
+        val uuidResponse = uuidUrl.readText()
+        val simpleProfile = Json.decodeFromString<SimpleMcProfile>(uuidResponse)
+        val uuid = simpleProfile.id
+        getMcPlayer(Uuid.parse(uuid))
+    } catch (e: Exception) {
+        logger.warn("Something went wrong while fetching Minecraft profile for username: $name")
+        e.printStackTrace()
+        null
+    }
 }

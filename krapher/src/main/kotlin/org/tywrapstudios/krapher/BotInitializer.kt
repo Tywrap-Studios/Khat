@@ -7,11 +7,7 @@ import dev.kordex.core.ExtensibleBot
 import dev.kordex.core.utils.scheduling.Scheduler
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.tywrapstudios.krapher.extensions.minecraft.ChatExtension
-import org.tywrapstudios.krapher.extensions.minecraft.CommandExtension
-import org.tywrapstudios.krapher.extensions.minecraft.LinkingExtension
-import org.tywrapstudios.krapher.extensions.minecraft.LookupExtension
-import org.tywrapstudios.krapher.extensions.minecraft.MiscExtension
+import org.tywrapstudios.krapher.extensions.minecraft.*
 
 val logger: Logger = LoggerFactory.getLogger("Krapher")
 
@@ -39,7 +35,7 @@ object BotInitializer {
             add(::MiscExtension)
         }
 
-        intents(false) {  }
+        intents(false) { }
     }
 
     suspend fun start(config: BotConfig) {

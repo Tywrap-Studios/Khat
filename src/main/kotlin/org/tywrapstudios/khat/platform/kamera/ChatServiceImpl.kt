@@ -12,13 +12,15 @@ object ChatServiceImpl : ChatService {
             if (player.chatVisibility != ChatVisiblity.FULL) {
                 continue
             }
-            player.sendSystemMessage(Component
-                .literal("$name: ")
-                .withStyle(ChatFormatting.BLUE)
-                .append(Component
-                    .literal(message)
-                    .withStyle(ChatFormatting.RESET)
-                ),
+            player.sendSystemMessage(
+                Component
+                    .literal("$name: ")
+                    .withStyle(ChatFormatting.BLUE)
+                    .append(
+                        Component
+                            .literal(message)
+                            .withStyle(ChatFormatting.RESET)
+                    ),
             )
         }
     }

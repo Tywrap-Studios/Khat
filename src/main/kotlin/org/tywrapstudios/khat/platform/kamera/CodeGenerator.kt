@@ -9,7 +9,7 @@ object CodeGenerator {
     fun generateCode(): String {
         var code = ""
         for (n in 1..16) {
-            code += if(secureRandom.nextBoolean()) {
+            code += if (secureRandom.nextBoolean()) {
                 secureRandom.nextInt(0, 10)
             } else {
                 CHARS[secureRandom.nextInt(0, CHARS.length)]

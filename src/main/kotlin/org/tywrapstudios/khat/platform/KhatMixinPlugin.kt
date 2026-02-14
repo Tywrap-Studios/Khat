@@ -15,11 +15,11 @@ class KhatMixinPlugin : IMixinConfigPlugin {
         logger.debug("Checking whether $mixinClassName should be applied to $targetClassName.")
         return conditions[mixinClassName]?.invoke() ?: true
     }
-    
+
     private fun addCondition(mixinClassName: String, conditionSupplier: () -> Boolean) {
         conditions[mixinClassName] = conditionSupplier
     }
-    
+
     override fun onLoad(mixinPackage: String?) {
         addCondition("$mixinPackage.AsyncWorldInfoProviderMixin") {
             FabricLoader.getInstance().isModLoaded("spark")
@@ -31,7 +31,8 @@ class KhatMixinPlugin : IMixinConfigPlugin {
     override fun acceptTargets(
         myTargets: Set<String?>?,
         otherTargets: Set<String?>?
-    ) {  }
+    ) {
+    }
 
     override fun getMixins(): List<String>? = null
 
@@ -40,12 +41,14 @@ class KhatMixinPlugin : IMixinConfigPlugin {
         targetClass: ClassNode?,
         mixinClassName: String?,
         mixinInfo: IMixinInfo?
-    ) {  }
+    ) {
+    }
 
     override fun postApply(
         targetClassName: String?,
         targetClass: ClassNode?,
         mixinClassName: String?,
         mixinInfo: IMixinInfo?
-    ) {  }
+    ) {
+    }
 }

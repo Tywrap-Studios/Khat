@@ -3,8 +3,8 @@
   "package": "org.tywrapstudios.khat.mixin",
   "compatibilityLevel": "${java}",
   "mixins": [
-    "CrashReportMixin",
-    "AsyncWorldInfoProviderMixin"
+    "AsyncWorldInfoProviderMixin",
+    "CrashReportMixin"
   ],
   "injectors": {
     "defaultRequire": 1

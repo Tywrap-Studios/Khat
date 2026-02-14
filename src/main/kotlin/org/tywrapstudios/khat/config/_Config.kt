@@ -17,13 +17,14 @@ const val WEBHOOK_PATH = "${CONFIG_PATH}webhooks/"
 
 lateinit var globalConfig: Config
 
-val webhooks get() = globalConfig[KhatSpec.webhooks]
-    .map {
-        val webhook: ConfiguredWebhook by lazy {
-            ConfiguredWebhook(Webhook(it))
+val webhooks
+    get() = globalConfig[KhatSpec.webhooks]
+        .map {
+            val webhook: ConfiguredWebhook by lazy {
+                ConfiguredWebhook(Webhook(it))
+            }
+            webhook
         }
-        webhook
-    }
 
 val DiscordWebhook.id get() = context.id.toString()
 val ConfiguredWebhook.id get() = webhook.id

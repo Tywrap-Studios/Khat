@@ -5,7 +5,7 @@ plugins {
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
 
     // `maven-publish`
-     id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 version = "${property("mod.version")}+${sc.current.version}"
@@ -189,7 +189,7 @@ publishMods {
     modLoaders.add("quilt")
 
     dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
-        || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
+            || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
 
     modrinth {
         projectId = property("publish.modrinth") as String

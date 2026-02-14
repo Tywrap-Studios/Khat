@@ -14,18 +14,20 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.tywrapstudios.khat.logic.HandleMinecraft;
 
-import java.io.File;
-import java.nio.file.Path;import java.util.List;
+import java.nio.file.Path;
+import java.util.List;
+//? if <1.21
+//import java.io.File;
 
 @Mixin(CrashReport.class)
 @Debug(export = true)
 public abstract class CrashReportMixin {
     @Shadow
-    public abstract Throwable getException();
-
-    @Shadow
     @Final
     private static Logger LOGGER;
+
+    @Shadow
+    public abstract Throwable getException();
 
     @Inject(//? if >=1.21 {
             method = "saveToFile(Ljava/nio/file/Path;Lnet/minecraft/ReportType;Ljava/util/List;)Z",

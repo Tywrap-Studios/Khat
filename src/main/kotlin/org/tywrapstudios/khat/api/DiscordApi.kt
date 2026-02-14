@@ -20,8 +20,8 @@ suspend fun ConfiguredWebhook.sendLiteral(message: String) = webhook.execute {
             hex(config[WebhookSpec.primaryColor])
             footer(message)
         }
-    } else if(config[WebhookSpec.useComponents]) {
-        component<TextDisplayComponent>{
+    } else if (config[WebhookSpec.useComponents]) {
+        component<TextDisplayComponent> {
             content = message
         }
     } else {
@@ -35,7 +35,7 @@ suspend fun ConfiguredWebhook.sendChatMessage(message: String, player: McPlayer)
             hex(config[WebhookSpec.primaryColor])
             footer("${player.name}: $message", "https://mc-heads.net/avatar/${player.uuid}/90")
         }
-    } else if(config[WebhookSpec.useComponents]) {
+    } else if (config[WebhookSpec.useComponents]) {
         component<TextDisplayComponent> {
             content = "**${player.name.modifyToNegateMarkdown()}**: $message"
         }

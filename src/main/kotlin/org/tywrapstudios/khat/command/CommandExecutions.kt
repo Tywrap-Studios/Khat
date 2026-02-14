@@ -27,10 +27,8 @@ import org.tywrapstudios.khat.logic.HandleMinecraft
 import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import java.nio.file.Files
 import java.util.concurrent.TimeoutException
-import kotlin.Int
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
-import kotlin.text.trimIndent
 import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.toKotlinUuid
@@ -65,10 +63,13 @@ object CommandExecutions {
         val source = context.getSource()
         val message = """
                     --------[Config]---------
-                    ${webhooks.joinToString("\n") { 
-                        """${it.id}:
+                    ${
+            webhooks.joinToString("\n") {
+                """${it.id}:
                             |${it.config.toToml.toText()}
-                        """.trimMargin()}}
+                        """.trimMargin()
+            }
+        }
                     -----------------------
                     """.trimIndent()
         source.sendSuccess({
@@ -85,7 +86,8 @@ object CommandExecutions {
         } catch (_: NullPointerException) {
             HandleMinecraft.handleChatMessage("Debug!", McPlayer("Console", "console"))
             return 1
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
         return 0
     }
 
@@ -136,16 +138,19 @@ object CommandExecutions {
             val expirationTime = status.expires - Clock.System.now()
             var timeString = "Time left: N/A"
             if (!expirationTime.isNegative()) {
-                timeString = "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
+                timeString =
+                    "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
             }
             source.sendSuccess(
                 {
-                    Component.literal("""
+                    Component.literal(
+                        """
                         Link status for ${uuid.toHexDashString()}:
                         Verified: ${status.verified}
                         $timeString
                         Linked to ${status.snowflake}
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                 },
                 false
             )
@@ -212,7 +217,11 @@ object CommandExecutions {
         if (status == null) {
             source.sendSuccess(
                 {
-                    Component.literal("${target.id.toKotlinUuid().toHexDashString()} is currently not linked or being linked.")
+                    Component.literal(
+                        "${
+                            target.id.toKotlinUuid().toHexDashString()
+                        } is currently not linked or being linked."
+                    )
                 },
                 false
             )
@@ -220,16 +229,19 @@ object CommandExecutions {
             val expirationTime = status.expires - Clock.System.now()
             var timeString = "Time left: N/A"
             if (!expirationTime.isNegative()) {
-                timeString = "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
+                timeString =
+                    "Time left: ${expirationTime.toDateTimePeriod().minutes}m ${expirationTime.toDateTimePeriod().seconds % 60}s"
             }
             source.sendSuccess(
                 {
-                    Component.literal("""
+                    Component.literal(
+                        """
                         Link status for ${target.id.toKotlinUuid().toHexDashString()}:
                         Verified: ${status.verified}
                         $timeString
                         Linked to ${status.snowflake}
-                    """.trimIndent())
+                    """.trimIndent()
+                    )
                 },
                 false
             )

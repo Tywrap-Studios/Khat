@@ -6,7 +6,7 @@ import kotlinx.rpc.withService
 import org.tywrapstudios.kamera.api.ChatService
 import org.tywrapstudios.kamera.api.CommandService
 import org.tywrapstudios.kamera.api.LinkService
-import java.util.Scanner
+import java.util.*
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -25,7 +25,10 @@ fun main() = runBlocking {
                 println(nextLine.replace(">>link ", "").split(":"))
                 println(nextLine.replace(">>link ", "").split(":").first())
                 val link = KameraClient.get().withService<LinkService>()
-                    .generateCode(Uuid.parseHex(nextLine.replace(">>link ", "").split(":").first()), nextLine.replace(">>link ", "").split(":").last().toULong())
+                    .generateCode(
+                        Uuid.parseHex(nextLine.replace(">>link ", "").split(":").first()),
+                        nextLine.replace(">>link ", "").split(":").last().toULong()
+                    )
                 println("${link?.code}, ${link?.expires}")
             } else if (nextLine.startsWith(">>checklink ")) {
                 val response = KameraClient.get().withService<LinkService>()
@@ -35,8 +38,10 @@ fun main() = runBlocking {
                 KameraClient.get().withService<LinkService>()
                     .unlink(Uuid.parseHex(nextLine.replace(">>unlink ", "")))
             } else {
-                println(KameraClient.get().withService<CommandService>()
-                    .run(nextLine))
+                println(
+                    KameraClient.get().withService<CommandService>()
+                        .run(nextLine)
+                )
             }
         } catch (e: Throwable) {
             println("Error: $e")

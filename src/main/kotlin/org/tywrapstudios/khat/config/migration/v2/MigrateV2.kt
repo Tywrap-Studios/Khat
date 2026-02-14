@@ -3,19 +3,10 @@ package org.tywrapstudios.khat.config.migration.v2
 import com.uchuhimo.konf.Config
 import com.uchuhimo.konf.source.toml.toToml
 import net.fabricmc.loader.api.FabricLoader
-import org.tywrapstudios.khat.config.CONFIG_PATH
-import org.tywrapstudios.khat.config.GLOBAL_PATH
-import org.tywrapstudios.khat.config.KhatSpec
-import org.tywrapstudios.khat.config.WebhookSpec
-import org.tywrapstudios.khat.config.globalConfig
-import org.tywrapstudios.khat.config.webhooks
+import org.tywrapstudios.khat.config.*
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.createFile
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.readText
-import kotlin.io.path.writer
+import kotlin.io.path.*
 import kotlin.time.Clock
 
 val V2_PATH: Path = FabricLoader.getInstance()
@@ -43,15 +34,17 @@ object MigrateV2 {
         val config = Config {
             addSpec(V2Spec.DiscordSpec)
 
-            println(migrationPath
-                .readText()
-                .replace("// .*$|/\\*[\\s\\S]*?\\*/".toRegex(RegexOption.MULTILINE), "")
+            println(
+                migrationPath
+                    .readText()
+                    .replace("// .*$|/\\*[\\s\\S]*?\\*/".toRegex(RegexOption.MULTILINE), "")
             )
         }
-            .from.json.bytes(migrationPath
-                .readText()
-                .replace("// .*$|/\\*[\\s\\S]*?\\*/".toRegex(RegexOption.MULTILINE), "")
-                .toByteArray()
+            .from.json.bytes(
+                migrationPath
+                    .readText()
+                    .replace("// .*$|/\\*[\\s\\S]*?\\*/".toRegex(RegexOption.MULTILINE), "")
+                    .toByteArray()
             )
 
         val globalPath = FabricLoader.getInstance().configDir.resolve(GLOBAL_PATH)
@@ -82,7 +75,8 @@ object MigrateV2 {
             it.append("Your configs have been migrated from 2.0 to 3.0.")
             it.appendLine()
             it.appendLine()
-            it.append("""This means the following:
+            it.append(
+                """This means the following:
                 |- Your new 3.0 config files contain values from your previous setup;
                 |- Due to a technical limitation, your config files no longer contain helpful
                 |comments (you can go to 
@@ -90,7 +84,8 @@ object MigrateV2 {
                 |in case you want to view them);
                 |- Your old config file has been moved to `${migrationPath.toAbsolutePath()}` in case you want to
                 |access it.
-            """.trimMargin())
+            """.trimMargin()
+            )
             it.appendLine()
             it.appendLine()
             it.append("${Clock.System.now()}")

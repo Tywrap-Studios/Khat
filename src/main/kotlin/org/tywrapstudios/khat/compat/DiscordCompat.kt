@@ -1,11 +1,9 @@
 package org.tywrapstudios.khat.compat
 
 import com.uchuhimo.konf.Config
-import org.tywrapstudios.hookt.Webhook
-import org.tywrapstudios.khat.api.ConfiguredWebhook
 import org.tywrapstudios.khat.config.WebhookSpec
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 fun String.modifyToNegateDangerousPings(config: Config): String {
     var message = this

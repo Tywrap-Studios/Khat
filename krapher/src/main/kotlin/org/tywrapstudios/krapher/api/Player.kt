@@ -26,7 +26,7 @@ suspend fun getPlayer(member: Member): Player {
         null
     }
 
-    val player = if (result != null ) getMcPlayer(result.uuid) else null
+    val player = if (result != null) getMcPlayer(result.uuid) else null
 
     return Player(
         member,
