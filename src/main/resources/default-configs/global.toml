@@ -45,6 +45,4 @@ token = ""
 channel = ""
 # The IDs of the roles that have moderator permissions.
 # (E.g., your Minecraft operators)
-moderators = [
-    "1248646236475625535"
-]
+moderators = []
