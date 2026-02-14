@@ -29,6 +29,7 @@ import org.tywrapstudios.krapher.KameraClient
 import org.tywrapstudios.krapher.api.getPlayer
 import org.tywrapstudios.krapher.checks.isModerator
 import org.tywrapstudios.krapher.i18n.Translations
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration.Companion.seconds
 
 class MiscExtension : Extension() {
@@ -216,6 +217,7 @@ class MiscExtension : Extension() {
                             shouldBe
                         ).translate()
                     }
+                    return
                 }
             } else {
                 originalMessage.edit {
@@ -225,6 +227,11 @@ class MiscExtension : Extension() {
                         ).translate()
                 }
             }
+        } catch (_: CancellationException) {
+            channel.createMessage(
+                Translations.Responses.Misc.UpdateProfiles.cancelled.translate(),
+            )
+            return
         } catch (e: Exception) {
             e.printStackTrace()
             originalMessage.edit {
