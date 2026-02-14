@@ -38,7 +38,7 @@ class LinkingExtension : Extension() {
 
                 action {
                     val code = try {
-                        KameraClient.getClient().withService<LinkService>()
+                        KameraClient.get().withService<LinkService>()
                             .generateCode(Uuid.parse(arguments.uuid), member!!.id.value)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -76,7 +76,7 @@ class LinkingExtension : Extension() {
                     val member = member!!.id.value
 
                     val result = try {
-                        KameraClient.getClient().withService<LinkService>()
+                        KameraClient.get().withService<LinkService>()
                             .unlinkBySnowflake(member)
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -110,7 +110,7 @@ class LinkingExtension : Extension() {
 
                 action {
                     val result = try {
-                        KameraClient.getClient().withService<LinkService>()
+                        KameraClient.get().withService<LinkService>()
                             .forceVerification(Uuid.parse(arguments.uuid), arguments.member.id.value)
                     } catch (e: Exception) {
                         e.printStackTrace()

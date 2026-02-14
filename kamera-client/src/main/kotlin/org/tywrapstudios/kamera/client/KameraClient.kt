@@ -1,4 +1,4 @@
-package org.tywrapstudios.krapher
+package org.tywrapstudios.kamera.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
@@ -19,7 +19,7 @@ object KameraClient {
         install(Auth) {
             bearer {
                 loadTokens {
-                    BearerTokens(BotInitializer.config.mRpcToken, null)
+                    BearerTokens("Testing101", null)
                 }
             }
         }
@@ -33,7 +33,7 @@ object KameraClient {
     private fun HttpClient.createRpc() = this.rpc {
         url {
             host = "127.0.0.1"
-            port = BotInitializer.config.mRpcPort
+            port = 34230
             encodedPath = "kamera"
         }
 
@@ -51,15 +51,15 @@ object KameraClient {
 
     suspend fun get(): KtorRpcClient {
         try {
-            logger.debug("Checking health of client.")
+            println("Checking health of client.")
             val online = rpcClient.withService<ServerStatsService>().isOnline()
             val players = rpcClient.withService<ServerStatsService>().playerCount()
             val max = rpcClient.withService<ServerStatsService>().maximumPlayers()
-            logger.debug("Client is operable. Server returned status: ${if (online) "n" else "f"}${players}x${max}.")
+            println("Client is operable. Server returned status: ${if (online) "n" else "f"}${players}x${max}.")
             return rpcClient
         } catch (e: IllegalStateException) {
             if (e.message?.contains("cancelled") == true) {
-                logger.warn("Client was cancelled, reconnecting...")
+                println("Client was cancelled, reconnecting...")
                 return reconnect()
             }
         } catch (e: Throwable) {

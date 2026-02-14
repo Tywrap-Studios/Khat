@@ -14,7 +14,6 @@ import org.tywrapstudios.krapher.checks.isModerator
 import org.tywrapstudios.kamera.api.CommandService
 import org.tywrapstudios.krapher.KameraClient
 import org.tywrapstudios.krapher.i18n.Translations
-import org.tywrapstudios.krapher.logger
 
 class CommandExtension : Extension() {
     override val name: String = "krapher.minecraft.cmd"
@@ -57,7 +56,7 @@ class CommandExtension : Extension() {
     suspend fun InteractionContext<*,*,*,*>.run(command: String) {
         respond {
             val response = try {
-                KameraClient.getClient().withService<CommandService>()
+                KameraClient.get().withService<CommandService>()
                     .run(command)
             } catch (e: Exception) {
                 e.printStackTrace()

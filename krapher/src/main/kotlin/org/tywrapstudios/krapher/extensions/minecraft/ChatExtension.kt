@@ -23,7 +23,7 @@ class ChatExtension : Extension() {
             action {
                 val player = if (event.member != null) getPlayer(event.member!!) else null
                 val name = player?.getName() ?: "Discord Member"
-                KameraClient.getClient().withService<ChatService>()
+                KameraClient.get().withService<ChatService>()
                     .sendMessage(name, event.message.content)
             }
         }

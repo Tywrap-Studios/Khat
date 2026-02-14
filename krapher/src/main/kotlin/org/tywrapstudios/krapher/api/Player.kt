@@ -19,7 +19,7 @@ data class Player(
 
 suspend fun getPlayer(member: Member): Player {
     val result = try {
-        KameraClient.getClient().withService<LinkService>()
+        KameraClient.get().withService<LinkService>()
             .getLinkStatusBySnowflake(member.id.value)
     } catch (e: Exception) {
         e.printStackTrace()

@@ -21,7 +21,7 @@ class MiscExtension : Extension() {
             repeat = true
         ) {
             val triple = try {
-                val client = KameraClient.getClient().withService<ServerStatsService>()
+                val client = KameraClient.get().withService<ServerStatsService>()
                 Triple(client.isOnline(), client.playerCount(), client.maximumPlayers())
             } catch (e: Exception) {
                 e.printStackTrace()
