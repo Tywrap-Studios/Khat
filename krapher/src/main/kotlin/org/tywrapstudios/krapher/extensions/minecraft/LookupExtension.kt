@@ -3,8 +3,11 @@
 package org.tywrapstudios.krapher.extensions.minecraft
 
 import dev.kord.common.entity.ButtonStyle
+import dev.kord.core.behavior.edit
+import dev.kord.core.behavior.interaction.respondEphemeral
 import dev.kord.core.builder.components.emoji
 import dev.kord.core.entity.ReactionEmoji
+import dev.kord.core.event.interaction.ButtonInteractionCreateEvent
 import dev.kord.rest.builder.message.actionRow
 import dev.kord.rest.builder.message.create.FollowupMessageCreateBuilder
 import dev.kord.rest.builder.message.embed
@@ -15,12 +18,14 @@ import dev.kordex.core.commands.application.slash.publicSubCommand
 import dev.kordex.core.commands.converters.impl.member
 import dev.kordex.core.commands.converters.impl.string
 import dev.kordex.core.extensions.Extension
+import dev.kordex.core.extensions.event
 import dev.kordex.core.extensions.publicSlashCommand
 import kotlinx.rpc.withService
 import org.tywrapstudios.kamera.api.LinkService
 import org.tywrapstudios.krapher.KameraClient
 import org.tywrapstudios.krapher.api.McPlayer
 import org.tywrapstudios.krapher.api.getMcPlayer
+import org.tywrapstudios.krapher.checks.isModerator
 import org.tywrapstudios.krapher.i18n.Translations
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -120,6 +125,41 @@ class LookupExtension : Extension() {
                     }
                 }
             }
+
+            event<ButtonInteractionCreateEvent> {
+                check { isModerator() }
+                check { failIfNot(event.interaction.componentId.startsWith("minecraft:force-link:")) }
+
+                action {
+                    val uuid = Uuid.parse(event.interaction.componentId.split(":")[2])
+                    val snowflake = event.interaction.componentId.split(":")[3].toULong()
+                    val result = try {
+                        KameraClient.get().withService<LinkService>()
+                            .forceVerification(uuid, snowflake)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        null
+                    }
+
+                    if (result == null || !result.success) {
+                        event.interaction.respondEphemeral {
+                            embed {
+                                title = Translations.Responses.Link.Embed.title.translate()
+                                description = Translations.Responses.Link.Embed.error.translate()
+                                color = DISCORD_RED
+                            }
+                        }
+                    } else {
+                        event.interaction.respondEphemeral {
+                            embed {
+                                title = Translations.Responses.Link.Embed.title.translate()
+                                description = result.message
+                                color = DISCORD_BLURPLE
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -178,9 +218,10 @@ class LookupExtension : Extension() {
         }
         if (mcLink != null) {
             actionRow {
-                interactionButton(ButtonStyle.Primary, "minecraft:force-link") {
+                interactionButton(ButtonStyle.Primary, "minecraft:force-link:${mcLink.uuid.toHexString()}:${mcLink.snowflake}") {
                     label = "Force link"
                     emoji(ReactionEmoji.Unicode("🔗"))
+                    disabled = mcLink.verified
                 }
             }
         }
