@@ -7,4 +7,6 @@ object BotSpec : ConfigSpec() {
     val token by required<String>()
     val channel by required<String>()
     val moderators by required<Set<String>>()
+    val enforceUsername by required<Boolean>()
+    val pattern by required<String>()
 }

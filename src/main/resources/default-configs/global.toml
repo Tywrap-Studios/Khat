@@ -46,3 +46,9 @@ channel = ""
 # The IDs of the roles that have moderator permissions.
 # (E.g., your Minecraft operators)
 moderators = []
+# Whether to enforce a username pattern for linked accounts.
+enforceUsername = false
+# How to enforce users to have their Discord username as
+# their linked Minecraft username.
+# Use $displayName and $minecraft in your pattern
+pattern = "$displayName ($minecraft)"

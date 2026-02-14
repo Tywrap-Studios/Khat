@@ -52,6 +52,8 @@ data class BotConfig(
     val mRpcPort: Int,
     val chat: ULong,
     val moderators: Set<ULong>,
+    val enforceUsernames: Boolean,
+    val usernamePattern: String,
     val featureSet: FeatureSet,
 )
 
