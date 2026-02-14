@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import org.tywrapstudios.krapher.extensions.minecraft.ChatExtension
 import org.tywrapstudios.krapher.extensions.minecraft.CommandExtension
 import org.tywrapstudios.krapher.extensions.minecraft.LinkingExtension
+import org.tywrapstudios.krapher.extensions.minecraft.LookupExtension
 import org.tywrapstudios.krapher.extensions.minecraft.MiscExtension
 
 val logger: Logger = LoggerFactory.getLogger("Krapher")
@@ -31,7 +32,10 @@ object BotInitializer {
         extensions {
             if (config.featureSet.commands) add(::CommandExtension)
             if (config.featureSet.chat) add(::ChatExtension)
-            if (config.featureSet.linking) add(::LinkingExtension)
+            if (config.featureSet.linking) {
+                add(::LinkingExtension)
+                add(::LookupExtension)
+            }
             add(::MiscExtension)
         }
 
