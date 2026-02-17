@@ -3,9 +3,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
-
-    // `maven-publish`
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+//    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 val variant = sc.current.project.substringAfter("-", "")
@@ -13,7 +11,8 @@ val variant = sc.current.project.substringAfter("-", "")
 val addition = if (!variant.isEmpty()) "-$variant" else ""
 val mcVersion = sc.current.version
 
-version = "${property("mod.version")}+$mcVersion$addition"
+val archivesVersion = "${property("mod.version")}+$mcVersion$addition"
+version = archivesVersion
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
@@ -192,67 +191,31 @@ tasks {
     }
 }
 
-// Publishes builds to Modrinth and Curseforge with changelog from the CHANGELOG.md file
-publishMods {
-    file = tasks.remapJar.map { it.archiveFile.get() }
-    additionalFiles.from(tasks.remapSourcesJar.map { it.archiveFile.get() })
-    displayName = "${property("mod.name")} ${property("mod.version")} for ${property("mod.mc_title")}"
-    version = property("mod.version") as String
-    changelog = rootProject.file("CHANGELOG.md").readText()
-    type = STABLE
-    modLoaders.add("fabric")
-    modLoaders.add("quilt")
-
-    dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
-            || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
-
-    modrinth {
-        projectId = property("publish.modrinth") as String
-        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
-        projectDescription = rootProject.file("README.md").readText()
-
-        requires("fabric-api", "fabric-language-kotlin")
-    }
-
-//    curseforge {
-//        projectId = property("publish.curseforge") as String
-//        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+// Publishes builds to Modrinth and GitHub with changelog from the CHANGELOG.md file
+//publishMods {
+//    file = tasks.remapJar.map { it.archiveFile.get() }
+//    additionalFiles.from(tasks.remapSourcesJar.map { it.archiveFile.get() })
+//    displayName = "${property("mod.name")} ${property("mod.version")} for ${property("mod.mc_title")} (${property("mod.function_title")})"
+//    version = archivesVersion
+//    changelog = rootProject.file("CHANGELOG.md").readText()
+//    type = STABLE
+//    modLoaders.add("fabric")
+//    modLoaders.add("quilt")
+//
+//    dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
+//            || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
+//
+//    modrinth {
+//        projectId = property("publish.modrinth") as String
+//        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
 //        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
-//        requires {
-//            slug = "fabric-api"
-//        }
+//
+//        requires("fabric-api", "fabric-language-kotlin")
 //    }
-
-    github {
-        accessToken = providers.environmentVariable("GITHUB_TOKEN")
-        repository = "Tywrap-Studios/Khat"
-        commitish = "main"
-    }
-}
-/*
-// Publishes builds to a maven repository under `com.example:template:0.1.0+mc`
-publishing {
-    repositories {
-        maven("https://maven.example.com/releases") {
-            name = "myMaven"
-            // To authenticate, create `myMavenUsername` and `myMavenPassword` properties in your Gradle home properties.
-            // See https://stonecutter.kikugie.dev/wiki/tips/properties#defining-properties
-            credentials(PasswordCredentials::class.java)
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-        }
-    }
-
-    publications {
-        create<MavenPublication>("mavenJava") {
-            groupId = "${property("mod.group")}.${property("mod.id")}"
-            artifactId = property("mod.id") as String
-            version = project.version
-
-            from(components["java"])
-        }
-    }
-}
- */
+//
+//    github {
+//        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+//        repository = "Tywrap-Studios/Khat"
+//        commitish = "main"
+//    }
+//}
