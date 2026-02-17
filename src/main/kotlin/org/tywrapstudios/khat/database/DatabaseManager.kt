@@ -1,5 +1,6 @@
 package org.tywrapstudios.khat.database
 
+//? if krpc {
 import net.minecraft.world.level.storage.LevelResource
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.sqlite.SQLiteConfig
@@ -28,3 +29,4 @@ object DatabaseManager {
         database = Database.connect(source)
     }
 }
+//?}

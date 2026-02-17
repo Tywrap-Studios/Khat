@@ -1,3 +1,4 @@
+//? if krpc {
 @file:OptIn(ExperimentalUuidApi::class)
 
 package org.tywrapstudios.khat.database.tables
@@ -14,3 +15,4 @@ object LinkTable : Table() {
     val expires = kTimestamp("expires")
     val verified = bool("verified")
 }
+//?}

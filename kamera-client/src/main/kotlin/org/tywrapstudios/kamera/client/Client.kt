@@ -19,7 +19,7 @@ fun main() = runBlocking {
             val nextLine = scanner.nextLine()
             if (nextLine.startsWith(">>ch ")) {
                 KameraClient.get().withService<ChatService>()
-                    .sendMessage("Test", nextLine.replace(">>ch ", ""))
+                    .sendMessage("Test", "test", 0U, nextLine.replace(">>ch ", ""))
             } else if (nextLine.startsWith(">>link ")) {
                 println(nextLine.replace(">>link ", ""))
                 println(nextLine.replace(">>link ", "").split(":"))

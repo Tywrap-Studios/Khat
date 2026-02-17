@@ -47,7 +47,9 @@ fun initializeConfigs() {
 
     globalConfig = Config {
         addSpec(KhatSpec)
+        //? if krpc
         addSpec(RpcSpec)
+        //? if full
         addSpec(BotSpec)
     }
         .from.toml.resource("default-configs/global.toml")

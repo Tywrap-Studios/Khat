@@ -18,7 +18,13 @@ stonecutter {
     create(rootProject) {
         // See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
         versions("1.20.1", "1.21.1", "1.21.11")
-        vcsVersion = "1.21.1"
+        version("1.20.1-krpc", "1.20.1")
+        version("1.20.1-full", "1.20.1")
+        version("1.21.1-krpc", "1.21.1")
+        version("1.21.1-full", "1.21.1")
+        version("1.21.11-krpc", "1.21.11")
+        version("1.21.11-full", "1.21.11")
+        vcsVersion = "1.21.1-full"
     }
 }
 

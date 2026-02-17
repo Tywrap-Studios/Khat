@@ -1,3 +1,4 @@
+//? if krpc {
 package org.tywrapstudios.khat.platform.kamera.command
 
 import net.minecraft.commands.CommandSource
@@ -61,3 +62,4 @@ class MRpcCommandSource(val server: MinecraftServer) : CommandSource {
         return true
     }
 }
+//?}

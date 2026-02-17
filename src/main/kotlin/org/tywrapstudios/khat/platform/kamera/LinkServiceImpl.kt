@@ -1,3 +1,4 @@
+//? if krpc {
 @file:OptIn(ExperimentalUuidApi::class)
 
 package org.tywrapstudios.khat.platform.kamera
@@ -223,3 +224,4 @@ object LinkServiceImpl : LinkService {
         }
     }
 }
+//?}

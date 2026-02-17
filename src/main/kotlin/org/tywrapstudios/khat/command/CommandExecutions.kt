@@ -2,20 +2,25 @@
 
 package org.tywrapstudios.khat.command
 
-import com.mojang.brigadier.arguments.StringArgumentType
 import com.mojang.brigadier.context.CommandContext
 import com.uchuhimo.konf.source.toml.toToml
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.toDateTimePeriod
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.ChatFormatting
 import net.minecraft.commands.CommandSourceStack
-import net.minecraft.commands.arguments.GameProfileArgument
-import net.minecraft.commands.arguments.UuidArgument
 import net.minecraft.network.chat.Component
+//? if krpc {
 import org.tywrapstudios.kamera.api.LinkStatus
 import org.tywrapstudios.kamera.api.VerificationResult
+import kotlin.uuid.toKotlinUuid
+import net.minecraft.commands.arguments.GameProfileArgument
+import net.minecraft.commands.arguments.UuidArgument
+import kotlinx.coroutines.runBlocking
+import kotlinx.datetime.toDateTimePeriod
+import com.mojang.brigadier.arguments.StringArgumentType
+import kotlin.time.Clock
+import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
+//?}
 import org.tywrapstudios.khat.KhatMod
 import org.tywrapstudios.khat.api.McPlayer
 import org.tywrapstudios.khat.compat.handleSparkWorldTimeOut
@@ -24,14 +29,11 @@ import org.tywrapstudios.khat.config.globalConfig
 import org.tywrapstudios.khat.config.id
 import org.tywrapstudios.khat.config.webhooks
 import org.tywrapstudios.khat.logic.HandleMinecraft
-import org.tywrapstudios.khat.platform.kamera.LinkServiceImpl
 import java.nio.file.Files
 import java.util.concurrent.TimeoutException
 import kotlin.io.path.createDirectories
 import kotlin.io.path.writer
-import kotlin.time.Clock
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.toKotlinUuid
 
 @Suppress("unused")
 object CommandExecutions {
@@ -118,6 +120,7 @@ object CommandExecutions {
      *  LINK
      */
 
+    //? if krpc {
     internal fun status(context: CommandContext<CommandSourceStack>): Int {
         val uuid = context.source.entityOrException.uuid.toKotlinUuid()
 
@@ -248,4 +251,5 @@ object CommandExecutions {
         }
         return 1
     }
+    //?}
 }

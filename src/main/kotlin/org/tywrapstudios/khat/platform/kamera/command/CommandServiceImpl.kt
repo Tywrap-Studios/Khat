@@ -1,3 +1,4 @@
+//? if krpc {
 package org.tywrapstudios.khat.platform.kamera.command
 
 import net.minecraft.server.dedicated.DedicatedServer
@@ -24,3 +25,4 @@ object CommandServiceImpl : CommandService {
         return "Server is not dedicated"
     }
 }
+//?}

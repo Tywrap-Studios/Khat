@@ -1,3 +1,4 @@
+//? if full {
 package org.tywrapstudios.khat.config
 
 import com.uchuhimo.konf.ConfigSpec
@@ -10,3 +11,4 @@ object BotSpec : ConfigSpec() {
     val enforceUsername by required<Boolean>()
     val pattern by required<String>()
 }
+//?}

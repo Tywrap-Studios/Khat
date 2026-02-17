@@ -1,11 +1,13 @@
 package org.tywrapstudios.khat.command
 
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.arguments.StringArgumentType
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
+//? if krpc {
 import net.minecraft.commands.arguments.GameProfileArgument
 import net.minecraft.commands.arguments.UuidArgument
+import com.mojang.brigadier.arguments.StringArgumentType
+//?}
 
 //? if 1.21.11
 //import net.minecraft.server.permissions.Permissions
@@ -53,6 +55,7 @@ object CommandImpl {
             .executes(CommandExecutions::forceTimeoutMessage)
             .build()
 
+        //? if krpc {
         val link = Commands
             .literal("link")
             .build()
@@ -106,6 +109,7 @@ object CommandImpl {
             .argument("target", GameProfileArgument.gameProfile())
             .executes(CommandExecutions::viewLink)
             .build()
+        //?}
 
         /* Root */
         dispatcher.root.addChild(root)
@@ -119,6 +123,7 @@ object CommandImpl {
         debug.addChild(forceTimeout)
 
         /* Link */
+        //? if krpc {
         root.addChild(link)
         link.addChild(status)
         link.addChild(verify)
@@ -128,5 +133,6 @@ object CommandImpl {
         forceLink.addChild(idArg)
         link.addChild(viewLink)
         viewLink.addChild(targetArg)
+        //?}
     }
 }

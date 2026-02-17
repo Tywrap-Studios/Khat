@@ -1,7 +1,7 @@
+//? if krpc {
 @file:OptIn(ExperimentalUuidApi::class)
 
 package org.tywrapstudios.khat.database.sql
-
 import org.jetbrains.exposed.v1.core.ColumnTransformer
 import org.jetbrains.exposed.v1.core.Table
 import org.jetbrains.exposed.v1.javatime.timestamp
@@ -29,3 +29,4 @@ class KInstantTransformer : ColumnTransformer<java.time.Instant, Instant> {
 }
 
 fun Table.kTimestamp(name: String) = timestamp(name).transform(KInstantTransformer())
+//?}

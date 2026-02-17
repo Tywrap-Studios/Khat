@@ -1,3 +1,4 @@
+//? if krpc {
 package org.tywrapstudios.khat.platform.kamera
 
 import java.security.SecureRandom
@@ -18,3 +19,4 @@ object CodeGenerator {
         return code
     }
 }
+//?}

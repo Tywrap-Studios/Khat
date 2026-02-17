@@ -8,7 +8,12 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
-version = "${property("mod.version")}+${sc.current.version}"
+val variant = sc.current.project.substringAfter("-", "")
+
+val addition = if (!variant.isEmpty()) "-$variant" else ""
+val mcVersion = sc.current.version
+
+version = "${property("mod.version")}+$mcVersion$addition"
 base.archivesName = property("mod.id") as String
 
 val requiredJava = when {
@@ -17,6 +22,9 @@ val requiredJava = when {
     sc.current.parsed >= "1.17" -> JavaVersion.VERSION_16
     else -> JavaVersion.VERSION_1_8
 }
+
+val krpc = variant == "krpc" || variant == "full"
+val full = variant == "full"
 
 repositories {
     /**
@@ -45,9 +53,11 @@ dependencies {
         for (it in modules) modImplementation(fabricApi.module(it, property("deps.fabric_api") as String))
     }
 
-    fun DependencyHandlerScope.includeImplementation(dep: Any) {
-        implementation(dep)
-        include(dep)
+    fun DependencyHandlerScope.includeImplementation(dep: Any, condition: () -> Boolean = { true }) {
+        if (condition()){
+            implementation(dep)
+            include(dep)
+        }
     }
 
     minecraft("com.mojang:minecraft:${sc.current.version}")
@@ -68,28 +78,35 @@ dependencies {
     include("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}") {
         exclude("org.slf4j", "slf4j-simple")
     }
-    // Ktor
+    // Ktor Client
     includeImplementation("io.ktor:ktor-client-core:${property("deps.ktor")}")
     includeImplementation("io.ktor:ktor-client-cio:${property("deps.ktor")}")
     includeImplementation("io.ktor:ktor-client-content-negotiation:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-server-netty-jvm:${property("deps.ktor")}")
-    includeImplementation("io.ktor:ktor-server-auth:${property("deps.ktor")}")
-    // kRPC
-    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:${property("deps.krpc")}")
-    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:${property("deps.krpc")}")
-    includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:${property("deps.krpc")}")
-    // kamera
-    includeImplementation(project(":kamera"))
-    // krapher
-    includeImplementation(project(":krapher"))
-    // Exposed
-    includeImplementation("org.jetbrains.exposed:exposed-core:${property("deps.exposed")}")
-    includeImplementation("org.jetbrains.exposed:exposed-dao:${property("deps.exposed")}")
-    includeImplementation("org.jetbrains.exposed:exposed-java-time:${property("deps.exposed")}")
-    includeImplementation("org.jetbrains.exposed:exposed-jdbc:${property("deps.exposed")}")
-    includeImplementation("org.jetbrains.exposed:exposed-json:${property("deps.exposed")}")
-    includeImplementation("org.xerial:sqlite-jdbc:${property("deps.sqlite-jdbc")}")
+    if (krpc) {
+        // Ktor Server
+        includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
+        includeImplementation("io.ktor:ktor-server-netty-jvm:${property("deps.ktor")}")
+        includeImplementation("io.ktor:ktor-server-auth:${property("deps.ktor")}")
+        // kRPC
+        includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-server:${property("deps.krpc")}")
+        includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-server:${property("deps.krpc")}")
+        includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json:${property("deps.krpc")}")
+        // kamera
+        includeImplementation(project(":kamera"))
+    }
+    if (full) {
+        // krapher
+        includeImplementation(project(":krapher"))
+    }
+    if (krpc) {
+        // Exposed
+        includeImplementation("org.jetbrains.exposed:exposed-core:${property("deps.exposed")}")
+        includeImplementation("org.jetbrains.exposed:exposed-dao:${property("deps.exposed")}")
+        includeImplementation("org.jetbrains.exposed:exposed-java-time:${property("deps.exposed")}")
+        includeImplementation("org.jetbrains.exposed:exposed-jdbc:${property("deps.exposed")}")
+        includeImplementation("org.jetbrains.exposed:exposed-json:${property("deps.exposed")}")
+        includeImplementation("org.xerial:sqlite-jdbc:${property("deps.sqlite-jdbc")}")
+    }
 
     /* Compat */
     // Spark
@@ -99,8 +116,6 @@ dependencies {
         "fabric-lifecycle-events-v1",
         "fabric-message-api-v1",
         "fabric-command-api-v2",
-        "fabric-resource-loader-v0",
-        "fabric-content-registries-v0"
     )
 }
 
@@ -172,7 +187,7 @@ tasks {
     register<Copy>("buildAndCollect") {
         group = "build"
         from(remapJar.map { it.archiveFile }, remapSourcesJar.map { it.archiveFile })
-        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+        into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}+${project.property("mod.mc_title")}"))
         dependsOn("build")
     }
 }

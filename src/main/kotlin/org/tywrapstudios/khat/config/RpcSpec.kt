@@ -1,3 +1,4 @@
+//? if krpc {
 package org.tywrapstudios.khat.config
 
 import com.uchuhimo.konf.ConfigSpec
@@ -13,3 +14,4 @@ object RpcSpec : ConfigSpec() {
         val linking by required<Boolean>()
     }
 }
+//?}

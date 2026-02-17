@@ -4,7 +4,7 @@ plugins {
     // id("me.modmuss50.mod-publish-plugin") version "1.0.+" apply false
 }
 
-stonecutter active "1.21.1"
+stonecutter active "1.21.1-full"
 
 /*
 // Make newer versions be published last
@@ -16,9 +16,17 @@ stonecutter tasks {
 
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
-    swaps["mod_version"] = "\"${property("mod.version")}\""
-    swaps["minecraft"] = "\"${node.metadata.version}\""
+    val variant = node.metadata.project.substringAfter("-", "")
+
+    val addition = if (!variant.isEmpty()) "-$variant" else ""
+    val version = node.metadata.version
+    val modVersion = "${property("mod.version")}+$version$addition"
+    swaps["mod_version"] = "\"$modVersion\""
+    swaps["minecraft"] = "\"$version\""
     swaps["mod_id"] = "\"${property("mod.id")}\""
+
+    constants["krpc"] = variant == "krpc" || variant == "full"
+    constants["full"] = variant == "full"
 
     replacements {
         string(current.parsed >= "1.21.11") {
