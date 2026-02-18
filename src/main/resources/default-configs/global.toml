@@ -16,7 +16,7 @@ webhooks = []
 #   version.                                                #
 #############################################################
 
-# Configure RPC funcionality.
+# Configure RPC functionality.
 # Requires "krpc" or "full" mod functionality.
 [rpc]
 # Whether to start an embedded kRPC server for incoming connections.

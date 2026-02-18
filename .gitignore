@@ -147,3 +147,7 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+
+### VitePress
+docs/.vitepress/cache
+docs/.vitepress/dist
