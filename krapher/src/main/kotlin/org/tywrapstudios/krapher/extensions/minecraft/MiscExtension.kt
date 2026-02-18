@@ -60,7 +60,6 @@ class MiscExtension : Extension() {
         event<MemberUpdateEvent> {
             check {
                 anyGuild()
-
             }
 
             action {

@@ -7,6 +7,7 @@ export default defineConfig({
 
   title: "Khat",
   description: "Chat To Discord, Discord To Chat",
+  head: [['link', { rel: 'icon', href: '/Khat/favicon.ico' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -48,9 +49,10 @@ export default defineConfig({
           {
             text: 'Internals', items: [
               {text: 'mRPC', link: '/development/mrpc'},
-              {text: 'krapher', link: '/development/krapher'},
+              {text: 'Krapher', link: '/development/krapher'},
             ],
           },
+          {text: 'Depending', link: '/development/depending'},
         ]
       }]
     },
