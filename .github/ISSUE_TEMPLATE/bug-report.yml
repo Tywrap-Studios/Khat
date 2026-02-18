@@ -1,0 +1,87 @@
+name: Bug Report
+description: Report a bug
+labels: [bug]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before reporting a crash here, please make sure you are on the latest supported version.
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What you expected to see.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Observed/actual behavior
+      description: What you actually saw.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps/models to reproduce
+      description: This may include a screenshot, a video, or detailed instructions to help reconstruct the issue.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: Device Info
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: What operating system are you running your server on
+      options:
+        - Windows
+        - Mac
+        - Ubuntu Linux
+        - Debian Linux
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: minecraft-version
+    attributes:
+      label: Minecraft version
+      placeholder: "1.21.1"
+    validations:
+      required: true
+
+  - type: input
+    id: mod-version
+    attributes:
+      label: Mod version
+      placeholder: "2.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+       A link to your latest.log after experiencing the bug.
+       You should use a site like https://mclo.gs to automatically remove sensitive data.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Other Information
+      description: |
+        Feel free to include other information that may be helpful here.
+        The more information we receive, the quicker and more effective we can be at finding the solution to the issue.
+    validations:
+      required: false

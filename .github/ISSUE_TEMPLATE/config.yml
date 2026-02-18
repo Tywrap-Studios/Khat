@@ -1,0 +1,10 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Support
+    url: https://tiazzz.me/discord
+    about: Join our Discord server for user-support!
+  - name: Docs
+    url: https://docs.tiazzz.me/Khat
+    about: Our official documentation
+  - name: Reporting bugs for CTD or versions below 2.0.0
+    about: Versions below 2.0.0 (aka CTD) are no longer actively maintained and supported, you are urged to update to Khat 2.0.0.
