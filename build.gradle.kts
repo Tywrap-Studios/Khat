@@ -94,7 +94,7 @@ dependencies {
     includeImplementation("io.ktor:ktor-serialization-kotlinx-json:${property("deps.ktor")}")
     if (krpc) {
         // Ktor Server
-        includeImplementation("io.ktor:ktor-server-netty-jvm:${property("deps.ktor")}")
+        includeImplementation("io.ktor:ktor-server-cio-jvm:${property("deps.ktor")}")
         includeImplementation("io.ktor:ktor-server-auth:${property("deps.ktor")}")
         // kRPC
         includeImplementation("org.jetbrains.kotlinx:kotlinx-rpc-core:${property("deps.krpc")}")
@@ -228,8 +228,7 @@ fun DependencyHandlerScope.includeTransitive(
         }
 
         val includeAnyway = arrayOf(
-            "icu4j",
-            "netty-"
+            "icu4j"
         )
 
         if (kotlinDependency.children.any { dep -> dep.name == it.name }) {

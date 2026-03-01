@@ -20,7 +20,7 @@ class ConfiguredWebhook(
         addSpec(WebhookSpec)
     }
         .from.toml.resource("default-configs/webhook.toml")
-        .from.toml.watchFile(generateFile())
+        .from.toml.file(generateFile())
 
     fun generateFile(): File {
         val configPath = FabricLoader.getInstance()

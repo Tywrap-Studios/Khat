@@ -6,7 +6,7 @@ import org.tywrapstudios.khat.config.RpcSpec
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.server.cio.CIO
 import io.ktor.server.routing.*
 import kotlinx.rpc.krpc.ktor.server.Krpc
 import kotlinx.rpc.krpc.ktor.server.rpc
@@ -79,7 +79,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     //? if krpc {
     private fun startRpc() {
         RPC_JOB = KhatMod.launch {
-            embeddedServer(Netty, port = globalConfig[RpcSpec.port]) {
+            embeddedServer(CIO, port = globalConfig[RpcSpec.port]) {
                 install(Authentication) {
                     bearer("rpc-auth") {
                         if (globalConfig[RpcSpec.token].isEmpty()) {

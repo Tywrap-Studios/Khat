@@ -28,6 +28,9 @@ class ChatExtension : Extension() {
                 if (member.isBot) {
                     return@action
                 }
+                if (event.message.channelId != Snowflake(BotInitializer.config.chat)) {
+                    return@action
+                }
                 val player = getPlayer(member)
                 val name = player.getName()
                 KameraClient.get().withService<ChatService>()

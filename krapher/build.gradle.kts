@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "org.tywrapstudios"
-version = "0.1.0"
+version = "0.1.1"
 
 val requiredJava = JavaVersion.VERSION_17
 
