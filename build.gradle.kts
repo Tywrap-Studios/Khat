@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
-//    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 val variant = sc.current.project.substringAfter("-", "")
@@ -259,30 +259,22 @@ fun DependencyHandlerScope.handleIncludes(configuration: Configuration) {
 }
 
 // Publishes builds to Modrinth and GitHub with changelog from the CHANGELOG.md file
-//publishMods {
-//    file = tasks.remapJar.map { it.archiveFile.get() }
-//    additionalFiles.from(tasks.remapSourcesJar.map { it.archiveFile.get() })
-//    displayName = "${property("mod.name")} ${property("mod.version")} for ${property("mod.mc_title")} (${property("mod.function_title")})"
-//    version = archivesVersion
-//    changelog = rootProject.file("CHANGELOG.md").readText()
-//    type = STABLE
-//    modLoaders.add("fabric")
-//    modLoaders.add("quilt")
-//
-//    dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
-//            || providers.environmentVariable("GITHUB_TOKEN").getOrNull() == null
-//
-//    modrinth {
-//        projectId = property("publish.modrinth") as String
-//        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-//        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
-//
-//        requires("fabric-api", "fabric-language-kotlin")
-//    }
-//
-//    github {
-//        accessToken = providers.environmentVariable("GITHUB_TOKEN")
-//        repository = "Tywrap-Studios/Khat"
-//        commitish = "main"
-//    }
-//}
+publishMods {
+    file = tasks.remapJar.map { it.archiveFile.get() }
+    additionalFiles.from(tasks.remapSourcesJar.map { it.archiveFile.get() })
+    displayName = "${property("mod.name")} ${property("mod.version")} for ${property("mod.mc_title")} (${property("mod.function_title")})"
+    version = archivesVersion
+    changelog = rootProject.file("CHANGELOG.md").readText()
+    type = STABLE
+    modLoaders.add("fabric")
+
+    dryRun = providers.environmentVariable("MODRINTH_TOKEN").getOrNull() == null
+
+    modrinth {
+        projectId = property("publish.modrinth") as String
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
+
+        requires("fabric-api", "fabric-language-kotlin")
+    }
+}

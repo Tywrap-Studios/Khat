@@ -5,6 +5,15 @@ plugins {
 
 stonecutter active "1.21.1-full"
 
+stonecutter tasks {
+    val ordering = versionComparator.thenComparingInt {
+        if (it.metadata.project.endsWith("full")) 2
+        else if (it.metadata.project.endsWith("krpc")) 1
+        else 0
+    }
+    order("publishModrinth", ordering)
+}
+
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
     val variant = node.metadata.project.substringAfter("-", "")
