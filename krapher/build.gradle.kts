@@ -6,6 +6,7 @@ plugins {
     id("io.ktor.plugin") version "3.3.2"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
     id("dev.kordex.gradle.i18n") version "1.1.1"
+    `maven-publish`
 }
 
 group = "org.tywrapstudios"
@@ -14,6 +15,7 @@ version = "0.1.0"
 val requiredJava = JavaVersion.VERSION_17
 
 repositories {
+    mavenLocal()
     mavenCentral()
 
     maven("https://snapshots-repo.kordex.dev") { name = "KordEx (Snapshots, R2)" }
@@ -49,4 +51,19 @@ kotlin {
 
 i18n {
     bundle("krapher.strings", "org.tywrapstudios.krapher.i18n")
+}
+
+tasks {
+    // Idk where the hell Shadow came from
+    shadowJar {
+        enabled = false
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }

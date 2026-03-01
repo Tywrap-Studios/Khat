@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
+    `maven-publish`
 }
 
 group = "org.tywrapstudios"
@@ -10,6 +11,7 @@ version = "0.1.0"
 val requiredJava = JavaVersion.VERSION_17
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -28,5 +30,13 @@ kotlin {
     jvmToolchain(requiredJava.majorVersion.toInt())
     compilerOptions {
         jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(requiredJava.majorVersion))
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
     }
 }
