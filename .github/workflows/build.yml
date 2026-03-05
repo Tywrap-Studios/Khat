@@ -21,6 +21,10 @@ jobs:
           distribution: 'microsoft'
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
+      - name: publish local dependencies
+        run: |
+          ./gradlew :kamera:publishToMavenLocal
+          ./gradlew :krapher:publishToMavenLocal
       - name: build
         run: ./gradlew buildAndCollect
       - name: capture build artifacts
