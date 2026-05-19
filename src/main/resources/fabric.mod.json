@@ -27,7 +27,7 @@
   "mixins": [
     "ctd.mixins.json"
   ],
-  "accessWidener": "ctd.accesswidener",
+  "accessWidener": "ctd.ct",
   "depends": {
     "fabricloader": ">=0.17",
     "minecraft": "${minecraft}",
