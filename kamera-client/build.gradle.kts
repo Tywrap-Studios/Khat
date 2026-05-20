@@ -23,13 +23,13 @@ dependencies {
 
 java {
     withSourcesJar()
-    targetCompatibility = JavaVersion.VERSION_21
-    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 kotlin {
-    jvmToolchain(JavaVersion.VERSION_21.majorVersion.toInt())
+    jvmToolchain(JavaVersion.VERSION_17.majorVersion.toInt())
     compilerOptions {
-        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(JavaVersion.VERSION_21.majorVersion))
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(JavaVersion.VERSION_17.majorVersion))
     }
 }

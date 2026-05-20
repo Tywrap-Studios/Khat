@@ -28,7 +28,7 @@ stonecutter {
         version("1.21.11-full", "1.21.11")
         version("26.1.2-krpc", "26.1.2")
         version("26.1.2-full", "26.1.2")
-        vcsVersion = "1.21.1-full"
+        vcsVersion = "26.1.2-full"
     }
 }
 

@@ -21,23 +21,23 @@ object ChatServiceImpl : ChatService {
                 .setStyle(
                     Style.EMPTY
                         .withClickEvent(
-                            //? if 1.21.11 {
-                            /*ClickEvent.SuggestCommand("<@$id>")
-                            *///?} else {
-                            ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "<@$id>")
-                            //?}
+                            //? if >=1.21.11 {
+                            ClickEvent.SuggestCommand("<@$id>")
+                            //?} else {
+                            /*ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "<@$id>")
+                            *///?}
                         )
                         .withHoverEvent(
-                            //? if 1.21.11 {
-                            /*HoverEvent.ShowText(
+                            //? if >=1.21.11 {
+                            HoverEvent.ShowText(
                                 Component.literal("($username) (Click to mention)").withStyle(ChatFormatting.BLUE)
                             )
-                            *///?} else {
-                            HoverEvent(
+                            //?} else {
+                            /*HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("($username) (Click to mention)").withStyle(ChatFormatting.BLUE)
                             )
-                            //?}
+                            *///?}
                         )
                         .withColor(ChatFormatting.BLUE)
                 )
@@ -46,21 +46,21 @@ object ChatServiceImpl : ChatService {
                 .withStyle(
                     Style.EMPTY
                         .withClickEvent(
-                            //? if 1.21.11 {
-                            /*ClickEvent.CopyToClipboard(message)
-                            *///?} else {
-                            ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, message)
-                            //?}
+                            //? if >=1.21.11 {
+                            ClickEvent.CopyToClipboard(message)
+                            //?} else {
+                            /*ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, message)
+                            *///?}
                         )
                         .withHoverEvent(
-                            //? if 1.21.11 {
-                            /*HoverEvent.ShowText(Component.literal("Copy to Clipboard").withStyle(ChatFormatting.GRAY))
-                            *///?} else {
-                            HoverEvent(
+                            //? if >=1.21.11 {
+                            HoverEvent.ShowText(Component.literal("Copy to Clipboard").withStyle(ChatFormatting.GRAY))
+                            //?} else {
+                            /*HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("Copy to Clipboard").withStyle(ChatFormatting.GRAY)
                             )
-                            //?}
+                            *///?}
                         )
                         .withColor(ChatFormatting.GRAY)
                 )

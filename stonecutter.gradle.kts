@@ -3,7 +3,7 @@ plugins {
     id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT" apply false
 }
 
-stonecutter active "1.21.1-full"
+stonecutter active "26.1.2-full"
 
 stonecutter tasks {
     val ordering = versionComparator.thenComparingInt {

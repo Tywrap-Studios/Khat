@@ -9,7 +9,7 @@
     ">> ItsTiazzz"
   ],
   "contact": {
-    "homepage": "https://github.com/Tywrap-Studios/Khat",
+    "homepage": "https://docs.tiazzz.me/Khat",
     "sources": "https://github.com/Tywrap-Studios/Khat",
     "issues": "https://github.com/Tywrap-Studios/Khat/issues"
   },
@@ -29,7 +29,7 @@
   ],
   "accessWidener": "ctd.ct",
   "depends": {
-    "fabricloader": ">=0.17",
+    "fabricloader": ">=0.18",
     "minecraft": "${minecraft}",
     "fabric-language-kotlin": "*",
     "fabric-api": "*"
