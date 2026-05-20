@@ -1,6 +1,10 @@
 # Changelog
 
-### 2.0.2 Hotfix 2: Electric Boogaloo <Badge type="tip" text="Latest"/>
+### 2.0.3 - Updating to 26.1! <Badge type="tip" text="Latest"/>
+- Add support for 26.1, 26.1.1 and 26.1.2
+- Update Fabric Loader to 0.18.4
+
+### 2.0.2 Hotfix 2: Electric Boogaloo
 - Fixed a bug where too much file watchers get deployed
   because of too many `watchFile` statements to Konf.
   - Webhook configs no longer automatically reload!
