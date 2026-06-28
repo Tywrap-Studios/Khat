@@ -37,10 +37,14 @@ import net.minecraft.server.MinecraftServer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.khat.api.McPlayer
+import org.tywrapstudios.khat.api.sendLiteral
 import org.tywrapstudios.khat.command.CommandImpl
+import org.tywrapstudios.khat.config.WebhookSpec
 import org.tywrapstudios.khat.config.initializeConfigs
 import org.tywrapstudios.khat.config.migration.v2.MigrateV2
+import org.tywrapstudios.khat.config.webhooks
 import org.tywrapstudios.khat.logic.HandleMinecraft
+import org.tywrapstudios.khat.logic.handleAll
 import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
@@ -127,6 +131,18 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     //? if full {
     private fun startBot() {
         BOT_JOB = KhatMod.launch {
+            if (!globalConfig[RpcSpec.enabled]) {
+                webhooks.forEach {
+                    var message = ("You are trying to run the bot without the kRPC server enabled." +
+                            "\nEnsure you are running the kRPC server in the config.").handleAll(it.config)
+                    if (!it.config[WebhookSpec.useEmbeds]) {
+                        message = "**$message**"
+                    }
+                    it.sendLiteral(message)
+                }
+                throw IllegalStateException("Tried to use bot without kRPC server. Ensure it's enabled in config.")
+            }
+
             BotInitializer.start(
                 BotConfig(
                     globalConfig[BotSpec.token],
