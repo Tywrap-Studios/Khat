@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
     id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 
 val variant = sc.current.project.substringAfter("-", "")
@@ -276,6 +276,7 @@ publishMods {
         projectId = property("publish.modrinth") as String
         accessToken = providers.environmentVariable("MODRINTH_TOKEN")
         minecraftVersions.addAll(property("mod.mc_targets").toString().split(' '))
+        environment = DEDICATED_SERVER_ONLY
 
         requires("fabric-api", "fabric-language-kotlin")
     }
