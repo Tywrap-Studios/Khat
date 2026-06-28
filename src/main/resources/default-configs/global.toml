@@ -49,6 +49,10 @@ linking = false
 # to the kRPC server.
 # Available features are snooped from the RPC config, as you need
 # RPC features enabled in order for this to work.
+#
+# !!! Do not forget to enable the RPC server in the config above !!!
+# Otherwise, we will deliberately crash the server, because the
+# bot cannot function without it.
 enabled = false
 # The token of the bot, from the developer dashboard.
 # See: https://tywrap-studios.tiazzz.me/r/bot-tokens
@@ -58,9 +62,10 @@ channel = ""
 # The IDs of the roles that have moderator permissions.
 # (E.g., your Minecraft operators)
 moderators = []
-# Whether to enforce a username pattern for linked accounts.
+# Whether to enforce a username pattern for linked accounts. (Experimental)
 enforceUsername = false
 # How to enforce users to have their Discord username as
 # their linked Minecraft username.
 # Use $displayName and $minecraft in your pattern
+# (Experimental)
 pattern = "$displayName ($minecraft)"
