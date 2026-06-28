@@ -9,6 +9,7 @@ fun String.convertWayPointMessage(): String {
     // xaero-waypoint : Shack : X : -906 : 64 : -2790 : 12 : false : 0 : Internal-overworld-waypoints
     //          0         1     2     3     4     5      6    7      8       9
     val name = parts[1]
+        .replace("gui.xaero-deathpoint", "Deathpoint")
     val x = parts[3]
     val y = parts[4]
     val z = parts[5]
