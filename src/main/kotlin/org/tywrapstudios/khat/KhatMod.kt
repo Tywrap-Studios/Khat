@@ -49,7 +49,7 @@ import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     val LOGGER: Logger = LoggerFactory.getLogger("Khat")
-    const val VERSION: String =  /*$ mod_version*/"2.0.3+26.1.2-full"
+    const val VERSION: String =  /*$ mod_version*/"2.0.4+26.1.2-full"
     const val MINECRAFT: String =  /*$ minecraft*/"26.1.2"
     const val MOD_ID: String = /*$ mod_id*/"ctd"
 
@@ -76,7 +76,21 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                 startBot()
             }
             //?}
+        } //? if full {
+        else if (globalConfig[BotSpec.enabled]) {
+            KhatMod.launch {
+                webhooks.forEach {
+                    var message = ("You are trying to run the bot without the kRPC server enabled." +
+                            "\nEnsure you are running the kRPC server in the config.").handleAll(it.config)
+                    if (!it.config[WebhookSpec.useEmbeds]) {
+                        message = "**$message**"
+                    }
+                    it.sendLiteral(message)
+                }
+            }
+            throw IllegalStateException("Tried to use bot without kRPC server. Ensure it's enabled in config.")
         }
+        //?}
         //?}
     }
 
@@ -131,18 +145,6 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     //? if full {
     private fun startBot() {
         BOT_JOB = KhatMod.launch {
-            if (!globalConfig[RpcSpec.enabled]) {
-                webhooks.forEach {
-                    var message = ("You are trying to run the bot without the kRPC server enabled." +
-                            "\nEnsure you are running the kRPC server in the config.").handleAll(it.config)
-                    if (!it.config[WebhookSpec.useEmbeds]) {
-                        message = "**$message**"
-                    }
-                    it.sendLiteral(message)
-                }
-                throw IllegalStateException("Tried to use bot without kRPC server. Ensure it's enabled in config.")
-            }
-
             BotInitializer.start(
                 BotConfig(
                     globalConfig[BotSpec.token],
