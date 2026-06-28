@@ -38,7 +38,7 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
-    maven("https://jitpack.io") { name = "JitPack" }
+    maven("https://maven.tiazzz.me/releases") { name = "Tywrap Studios Releases" }
     maven("https://snapshots-repo.kordex.dev") { name = "KordEx (Snapshots, R2)" }
     maven("https://releases-repo.kordex.dev") { name = "KordEx (Releases, R2)" }
     maven("https://repo.kordex.dev/snapshots") { name = "KordEx (Snapshots + Mirror, Reposilite)" }
@@ -86,9 +86,7 @@ dependencies {
     // mclo.gs API
     includeImplementation("gs.mclo:api:${property("deps.mclogs")}")
     // hookt
-    includeImplementation("com.github.Tywrap-Studios:hookt:${property("deps.hookt")}") {
-        exclude("org.slf4j", "slf4j-simple")
-    }
+    includeImplementation("org.tywrapstudios:hookt:${property("deps.hookt")}")
     // Ktor Client
     includeImplementation("io.ktor:ktor-client-core:${property("deps.ktor")}")
     includeImplementation("io.ktor:ktor-client-cio:${property("deps.ktor")}")
