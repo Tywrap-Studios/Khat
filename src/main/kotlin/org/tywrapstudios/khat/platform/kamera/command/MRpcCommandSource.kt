@@ -39,10 +39,12 @@ class MRpcCommandSource(val server: MinecraftServer) : CommandSource {
             //?} else {
             /*4,
             *///?}
-            "mRpc",
+            //? <26.3
+            //"mRpc",
             component,
             this.server,
-            null
+            //? <26.3
+            //null
         )
     }
 

@@ -49,8 +49,8 @@ import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     val LOGGER: Logger = LoggerFactory.getLogger("Khat")
-    const val VERSION: String =  /*$ mod_version*/"2.0.4+26.1.2-full"
-    const val MINECRAFT: String =  /*$ minecraft*/"26.1.2"
+    const val VERSION: String =  /*$ mod_version*/"2.0.5+26.3-full"
+    const val MINECRAFT: String =  /*$ minecraft*/"26.3"
     const val MOD_ID: String = /*$ mod_id*/"ctd"
 
     val MCL: MclogsClient = MclogsClient("Khat", VERSION, MINECRAFT)

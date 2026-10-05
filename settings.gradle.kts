@@ -18,17 +18,16 @@ plugins {
 
 stonecutter {
     create(rootProject) {
+        fun createVersions(vararg versions: String) {
+            this.versions(versions.toList())
+            for (v in versions) {
+                version("$v-krpc", v)
+                version("$v-full", v)
+            }
+        }
         // See https://stonecutter.kikugie.dev/wiki/start/#choosing-minecraft-versions
-        versions("1.20.1", "1.21.1", "1.21.11", "26.1.2")
-        version("1.20.1-krpc", "1.20.1")
-        version("1.20.1-full", "1.20.1")
-        version("1.21.1-krpc", "1.21.1")
-        version("1.21.1-full", "1.21.1")
-        version("1.21.11-krpc", "1.21.11")
-        version("1.21.11-full", "1.21.11")
-        version("26.1.2-krpc", "26.1.2")
-        version("26.1.2-full", "26.1.2")
-        vcsVersion = "26.1.2-full"
+        createVersions("1.20.1", "1.21.1", "1.21.11", "26.1.2", "26.3")
+        vcsVersion = "26.3-full"
     }
 }
 

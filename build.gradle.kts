@@ -38,7 +38,8 @@ repositories {
     }
     strictMaven("https://www.cursemaven.com", "CurseForge", "curse.maven")
     strictMaven("https://api.modrinth.com/maven", "Modrinth", "maven.modrinth")
-    maven("https://maven.tiazzz.me/releases") { name = "Tywrap Studios Releases" }
+//    maven("https://maven.tiazzz.me/releases") { name = "Tywrap Studios Releases" }
+    maven("https://repo.repsy.io/itstiazzz/maven") { name = "Tywrap Studios Releases Backup" }
     maven("https://snapshots-repo.kordex.dev") { name = "KordEx (Snapshots, R2)" }
     maven("https://releases-repo.kordex.dev") { name = "KordEx (Releases, R2)" }
     maven("https://repo.kordex.dev/snapshots") { name = "KordEx (Snapshots + Mirror, Reposilite)" }
