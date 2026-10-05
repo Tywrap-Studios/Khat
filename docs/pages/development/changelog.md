@@ -1,6 +1,9 @@
 # Changelog
 
-### 2.0.4 - Minor fixes <Badge type="tip" text="Latest"/>
+### 2.0.5 - Minor fixes <Badge type="tip" text="Latest"/>
+- Add support for 26.3
+
+### 2.0.4 - Minor fixes
 - Add support for 26.2
 - Fix [#1](https://github.com/Tywrap-Studios/Khat/issues/1)
 - Make enabling bot without kRPC throw
