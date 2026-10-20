@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
     id("io.ktor.plugin") version "3.3.2"
-    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.4"
 }
 
 group = "org.tywrapstudios"

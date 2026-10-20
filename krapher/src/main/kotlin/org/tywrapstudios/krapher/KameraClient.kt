@@ -13,6 +13,8 @@ import kotlinx.rpc.withService
 import org.tywrapstudios.kamera.api.ServerStatsService
 
 object KameraClient {
+    private var closed = false
+
     private lateinit var ktorClient: HttpClient
     private fun createKtor() = HttpClient {
         install(Auth) {
@@ -44,8 +46,15 @@ object KameraClient {
     }
 
     fun connect() {
+        closed = false
         ktorClient = createKtor()
         rpcClient = ktorClient.createRpc()
+    }
+
+    fun close() {
+        ktorClient.close()
+        rpcClient.close()
+        closed = true
     }
 
     suspend fun get(): KtorRpcClient {
@@ -57,7 +66,7 @@ object KameraClient {
             logger.debug("Client is operable. Server returned status: ${if (online) "n" else "f"}${players}x${max}.")
             return rpcClient
         } catch (e: IllegalStateException) {
-            if (e.message?.contains("cancelled") == true) {
+            if (e.message?.contains("cancelled") == true && !closed) {
                 logger.warn("Client was cancelled, reconnecting...")
                 return reconnect()
             }

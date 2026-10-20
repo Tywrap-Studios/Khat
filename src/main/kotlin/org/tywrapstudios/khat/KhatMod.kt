@@ -7,6 +7,7 @@ import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.engine.*
 import io.ktor.server.cio.CIO
+import io.ktor.server.cio.CIOApplicationEngine
 import io.ktor.server.routing.*
 import kotlinx.rpc.krpc.ktor.server.Krpc
 import kotlinx.rpc.krpc.ktor.server.rpc
@@ -49,7 +50,7 @@ import kotlin.coroutines.CoroutineContext
 
 object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     val LOGGER: Logger = LoggerFactory.getLogger("Khat")
-    const val VERSION: String =  /*$ mod_version*/"2.0.5+26.3-full"
+    const val VERSION: String =  /*$ mod_version*/"2.1.0+26.3-full"
     const val MINECRAFT: String =  /*$ minecraft*/"26.3"
     const val MOD_ID: String = /*$ mod_id*/"ctd"
 
@@ -57,6 +58,8 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     lateinit var SERVER: MinecraftServer
     //? if krpc
     var RPC_JOB: Job? = null
+    //? if krpc
+    var RPC_SERVER: EmbeddedServer<CIOApplicationEngine, CIOApplicationEngine.Configuration>? = null
     //? if full
     var BOT_JOB: Job? = null
 
@@ -97,7 +100,7 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
     //? if krpc {
     private fun startRpc() {
         RPC_JOB = KhatMod.launch {
-            embeddedServer(CIO, port = globalConfig[RpcSpec.port]) {
+            val server = embeddedServer(CIO, port = globalConfig[RpcSpec.port]) {
                 install(Authentication) {
                     bearer("rpc-auth") {
                         if (globalConfig[RpcSpec.token].isEmpty()) {
@@ -137,30 +140,50 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
                         }
                     }
                 }
-                LOGGER.info("Started RPC server")
-            }.start(wait = true)
+            }.also {
+                RPC_SERVER = it
+            }
+
+            try {
+                LOGGER.info("Starting RPC server")
+                server.start(wait = true)
+                awaitCancellation()
+            } catch (e: CancellationException) {
+                LOGGER.info("RPC Server requested cancellation. Shutting down... This can take a short minute, this is not a bug!")
+                throw e
+            } finally {
+                LOGGER.info("Finally: RPC Server shutting down...")
+                server.stop(1000, 5000)
+            }
         }
     }
     //?}
     //? if full {
     private fun startBot() {
         BOT_JOB = KhatMod.launch {
-            BotInitializer.start(
-                BotConfig(
-                    globalConfig[BotSpec.token],
-                    globalConfig[RpcSpec.token],
-                    globalConfig[RpcSpec.port],
-                    globalConfig[BotSpec.channel].toULong(),
-                    globalConfig[BotSpec.moderators].map { it.toULong() }.toSet(),
-                    globalConfig[BotSpec.enforceUsername],
-                    globalConfig[BotSpec.pattern],
-                    FeatureSet(
-                        globalConfig[RpcSpec.FeatureSpec.chat],
-                        globalConfig[RpcSpec.FeatureSpec.linking],
-                        globalConfig[RpcSpec.FeatureSpec.commands],
-                    ),
+            try {
+                BotInitializer.start(
+                    BotConfig(
+                        globalConfig[BotSpec.token],
+                        globalConfig[RpcSpec.token],
+                        globalConfig[RpcSpec.port],
+                        globalConfig[BotSpec.channel].toULong(),
+                        globalConfig[BotSpec.moderators].map { it.toULong() }.toSet(),
+                        globalConfig[BotSpec.enforceUsername],
+                        globalConfig[BotSpec.pattern],
+                        FeatureSet(
+                            globalConfig[RpcSpec.FeatureSpec.chat],
+                            globalConfig[RpcSpec.FeatureSpec.linking],
+                            globalConfig[RpcSpec.FeatureSpec.commands],
+                        ),
+                    )
                 )
-            )
+            } catch (e: CancellationException) {
+                LOGGER.info("Krapher requested cancellation. Shutting down...")
+                throw e
+            } finally {
+                LOGGER.info("Finally: Krapher shutting down...")
+            }
         }
     }
     //?}
@@ -172,6 +195,19 @@ object KhatMod : DedicatedServerModInitializer, CoroutineScope {
             //? if krpc
             DatabaseManager.setup()
             HandleMinecraft.handleChatMessage("Server started.", console)
+        }
+
+        ServerLifecycleEvents.SERVER_STOPPING.register {
+            LOGGER.info("Shutting down Khat...")
+            //? if full {
+            BotInitializer.close()
+            runBlocking { BOT_JOB?.cancelAndJoin() }
+            //?}
+
+            //? if krpc {
+            runBlocking { RPC_JOB?.cancelAndJoin() }
+            //?}
+            LOGGER.info("Finished marking Khat jobs for shutdown")
         }
 
         ServerLifecycleEvents.SERVER_STOPPED.register {

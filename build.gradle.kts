@@ -2,7 +2,7 @@ plugins {
     id("dev.kikugie.loom-back-compat")
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.serialization") version "2.3.0"
-    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.1"
+    id("org.jetbrains.kotlinx.rpc.plugin") version "0.10.4"
     id("me.modmuss50.mod-publish-plugin") version "2.1.1"
 }
 

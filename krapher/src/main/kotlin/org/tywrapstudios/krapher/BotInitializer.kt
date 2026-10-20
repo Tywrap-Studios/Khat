@@ -5,6 +5,8 @@ package org.tywrapstudios.krapher
 import dev.kord.gateway.PrivilegedIntent
 import dev.kordex.core.ExtensibleBot
 import dev.kordex.core.utils.scheduling.Scheduler
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.tywrapstudios.krapher.extensions.minecraft.*
@@ -43,6 +45,12 @@ object BotInitializer {
         this.config = config
         bot = setup(config.token)
         bot.start()
+    }
+
+    fun close() {
+        runBlocking { bot.close() }
+        scheduler.cancel()
+        KameraClient.close()
     }
 }
 
