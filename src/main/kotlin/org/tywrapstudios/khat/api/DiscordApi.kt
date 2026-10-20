@@ -60,7 +60,7 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                 divider = true
             }
             component<TextDisplayComponent> {
-                content = "**Error**: ${response?.error ?: error.message ?: "Unknown error"}"
+                content = "**Error**: ${error.message ?: "Unknown error"}"
             }
             if (response != null) {
                 component<TextDisplayComponent> {
@@ -79,7 +79,7 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                         content = """## Problems
                     ${
                             insights.analysis.problems.joinToString("\n") { analysis ->
-                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name})" + analysis.solutions.joinToString(
+                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level?.name})" + analysis.solutions.joinToString(
                                     "\n", ":\n### Solutions:"
                                 ) { solution ->
                                     ">>_${solution.message}_"
@@ -105,7 +105,7 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                 rgb(7864320)
                 field {
                     name = "Error"
-                    value = response?.error ?: error.message ?: "Unknown error"
+                    value = error.message ?: "Unknown error"
                     inline = true
                 }
                 if (response != null) {
@@ -122,7 +122,7 @@ suspend fun ConfiguredWebhook.sendCrashMessage(error: Throwable, log: Path) {
                     **Problems**
                     ${
                             insights.analysis.problems.joinToString("\n") { analysis ->
-                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level.name}):" + analysis.solutions.joinToString(
+                                "${analysis.message} (${analysis.counter}x, ${analysis.entry.level?.name}):" + analysis.solutions.joinToString(
                                     "\n", ">>Solutions:"
                                 ) { solution ->
                                     ">>_${solution.message}_"
